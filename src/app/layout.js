@@ -18,6 +18,9 @@ export default function RootLayout({ children, showIntroOverlay }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        {/* Warm Draco WASM decoder early */}
+        <link rel="preload" href="https://www.gstatic.com/draco/v1/decoders/draco_wasm_wrapper.js" as="script" crossOrigin="anonymous" />
+        <link rel="preload" href="https://www.gstatic.com/draco/v1/decoders/draco_decoder.wasm" as="fetch" crossOrigin="anonymous" />
         {/* Preload Draco GLB */}
         <link rel="preload" href="/models/c3d.glb" as="fetch" crossOrigin="anonymous" />
 

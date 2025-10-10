@@ -23,7 +23,9 @@ if (typeof window !== "undefined") {
 export default function ControllerInner() {
   // Setup Draco loader
   const dracoLoader = new DRACOLoader();
-  dracoLoader.setDecoderPath("/draco/"); // Put draco_decoder.js + draco_wasm_wrapper.js in /public/draco
+  // Use Google's CDN for Draco decoders to avoid waiting for local assets
+  dracoLoader.setDecoderPath("https://www.gstatic.com/draco/v1/decoders/");
+  dracoLoader.setDecoderConfig({ type: "wasm" });
 
   const { scene, nodes } = useGLTF("/models/c3d.glb", true, undefined, dracoLoader);
   const { gl, camera, invalidate } = useThree();
