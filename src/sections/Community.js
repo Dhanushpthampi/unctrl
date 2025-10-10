@@ -118,7 +118,7 @@ export default function Community() {
           scale: springScale,
         }}
       >
-        <UnCtrlButton href={CTA_LINKS.joinCommunity} external>
+        <UnCtrlButton href={CTA_LINKS.joinCommunity} target="_blank" external>
           <h1>JOIN THE CHAOS</h1>
         </UnCtrlButton>
       </motion.div>

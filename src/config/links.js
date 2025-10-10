@@ -50,10 +50,10 @@ export const SOCIAL_LINKS = Object.freeze({
 // Common navigation links (primary nav)
 export const NAV_LINKS = Object.freeze([
 	{ label: 'Home', href: ROUTES.HOME },
-	{ label: 'Products', href: EXTERNAL.PRODUCT_UNCTRL_RAGE_CONTROLLER, external: true },
-	{ label: 'About Us', href: EXTERNAL.ABOUT_US, external: true },
-	{ label: 'Community', href: EXTERNAL.COMMUNITY_PAGE, external: true },
-	{ label: 'Blog', href: EXTERNAL.BLOG, external: true },
+	{ label: 'Products', href: EXTERNAL.PRODUCT_UNCTRL_RAGE_CONTROLLER },
+	{ label: 'About Us', href: EXTERNAL.ABOUT_US },
+	{ label: 'Community', href: EXTERNAL.COMMUNITY_PAGE },
+	{ label: 'Blog', href: EXTERNAL.BLOG },
 ]);
 
 // Footer links (grouped by section if needed)
@@ -61,9 +61,9 @@ export const FOOTER_LINK_GROUPS = Object.freeze([
 	{
 		title: 'Column 1',
 		links: [
-			{ label: 'Instagram', href: EXTERNAL.INSTAGRAM },
-			{ label: 'Reddit', href: EXTERNAL.REDDIT },
-			{ label: 'Discord', href: EXTERNAL.DISCORD },
+			{ label: 'Instagram', href: EXTERNAL.INSTAGRAM, external: true },
+			{ label: 'Reddit', href: EXTERNAL.REDDIT, external: true },
+			{ label: 'Discord', href: EXTERNAL.DISCORD, external: true },
 			{ label: 'Blog', href: EXTERNAL.BLOG },
 		],
 	},

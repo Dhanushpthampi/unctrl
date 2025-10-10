@@ -27,7 +27,9 @@ export default function Footer() {
 										key={`${group.title}-${link.label}`}
 										href={link.href}
 										className="block hover:text-orange-500 transition-colors"
-										// All footer links open in same tab as requested
+										// Social links should open in a new tab; Shopify pages stay in same tab
+										target={link.external ? "_blank" : undefined}
+										rel={link.external ? "noopener noreferrer" : undefined}
 									>
 										{link.label}
 									</a>

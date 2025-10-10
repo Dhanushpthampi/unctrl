@@ -21,12 +21,12 @@ export default function DesktopNav({ height = 78 }) {
                 <AnimatedLink value={item.label.toUpperCase()} />
               </a>
             ) : (
-              <Link key={item.href} href={item.href} className="text-sm tracking-widest">
+              <Link key={item.href} href={item.href}  className="text-sm tracking-widest">
                 <AnimatedLink value={item.label.toUpperCase()} />
               </Link>
             )
           ))}
-          <UnCtrlButton href={CTA_LINKS.orderNow} external>ORDER NOW</UnCtrlButton>
+          <UnCtrlButton href={CTA_LINKS.orderNow} target="_blank" external>ORDER NOW</UnCtrlButton>
         </nav>
       </div>
     </div>
