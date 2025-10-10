@@ -4,7 +4,7 @@ export default function Story() {
   return (
     <section
       id="story"
-      className="relative w-screen h-screen bg-[#b34a00] overflow-hidden flex items-center justify-center"
+      className="relative w-screen h-screen bg-black md:bg-[#b34a00] overflow-hidden flex items-center justify-center"
     >
       {/* XL screens — blurred background filler */}
       <div className="absolute inset-0 hidden xl:block">
@@ -34,10 +34,10 @@ export default function Story() {
         </video>
       </div>
 
-      {/* Mobile — cropped bottom */}
-      <div className="absolute inset-0 block md:hidden overflow-hidden">
+      {/* Mobile — full width, centered horizontally */}
+      <div className="absolute inset-0 block md:hidden overflow-hidden flex items-center justify-center">
         <video
-          className="absolute top-0 left-0 w-full h-[110%] object-cover object-top"
+          className="w-full max-w-full h-auto"
           autoPlay
           loop
           muted
