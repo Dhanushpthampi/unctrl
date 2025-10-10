@@ -22,9 +22,9 @@ export async function preloadControllerAssets() {
     if (typeof window !== "undefined" && "requestIdleCallback" in window) {
       requestIdleCallback(() => {
         const paths = [
-          "/assets/usps/1.webp",
-          "/assets/usps/2.webp",
-          "/assets/usps/3.webp",
+          "/assets/usps/1.png",
+          "/assets/usps/2.png",
+          "/assets/usps/3.png",
         ];
         paths.forEach((src) => {
           const img = new Image();

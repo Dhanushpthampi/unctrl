@@ -11,7 +11,7 @@ import useButtonInteraction from "./useButtonInteraction";
 if (typeof window !== "undefined") {
   useGLTF.preload("/models/c3d.glb");
   requestIdleCallback?.(() => {
-    ["/assets/usps/1.webp", "/assets/usps/2.webp"].forEach((src) => {
+    ["/assets/usps/1.png", "/assets/usps/2.png"].forEach((src) => {
       const img = new Image();
       img.decoding = "async";
       img.loading = "eager";

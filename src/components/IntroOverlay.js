@@ -85,7 +85,6 @@ export default function IntroOverlay({ onFinished }) {
         playsInline
         autoPlay
         preload="auto"
-        poster="/assets/usps/1.webp"
       />
     </div>
   );
