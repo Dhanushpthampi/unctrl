@@ -3,6 +3,7 @@ import Image from "next/image";
 import { motion, useSpring, useMotionValue } from "framer-motion";
 import { useRef, useEffect } from "react";
 import UnCtrlButton from "@/components/UnCtrlButton";
+import { CTA_LINKS } from "@/config/links";
 
 export default function Community() {
   const sectionRef = useRef(null);
@@ -117,9 +118,9 @@ export default function Community() {
           scale: springScale,
         }}
       >
-        <motion.a href="#community"  >
-          <UnCtrlButton ><h1>JOIN THE CHAOS</h1></UnCtrlButton>
-        </motion.a>
+        <UnCtrlButton href={CTA_LINKS.joinCommunity} external>
+          <h1>JOIN THE CHAOS</h1>
+        </UnCtrlButton>
       </motion.div>
     </>
   );

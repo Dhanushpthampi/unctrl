@@ -3,6 +3,7 @@ import Link from "next/link";
 import { AnimatedLink } from "./AnimatedLink";
 import UnCtrlButton from "./UnCtrlButton";
 import LogoAnimated from "./LogoAnimated";
+import { NAV_LINKS, CTA_LINKS } from "@/config/links";
 
 
 export default function DesktopNav({ height = 78 }) {
@@ -14,12 +15,18 @@ export default function DesktopNav({ height = 78 }) {
       >
         <LogoAnimated baseSize={140} overlaySize={40} overlayOffsetX={-45} overlayOffsetY={0} />
         <nav className="flex items-center gap-10 text-white">
-          {["HOME", "PRODUCTS", "ABOUT US", "COMMUNITY", "BLOG"].map((item) => (
-            <Link key={item} href={`#${item.toLowerCase().replace(/\s+/g, "")}`} className="text-sm tracking-widest">
-              <AnimatedLink value={item} />
-            </Link>
+          {NAV_LINKS.map((item) => (
+            item.external ? (
+              <a key={item.href} href={item.href} target="_blank" rel="noopener noreferrer" className="text-sm tracking-widest">
+                <AnimatedLink value={item.label.toUpperCase()} />
+              </a>
+            ) : (
+              <Link key={item.href} href={item.href} className="text-sm tracking-widest">
+                <AnimatedLink value={item.label.toUpperCase()} />
+              </Link>
+            )
           ))}
-         <link></link> <UnCtrlButton>ORDER NOW</UnCtrlButton>
+          <UnCtrlButton href={CTA_LINKS.orderNow} external>ORDER NOW</UnCtrlButton>
         </nav>
       </div>
     </div>

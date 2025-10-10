@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { AnimatedLink } from "./AnimatedLink";
 import LogoAnimated from "./LogoAnimated";
+import { NAV_LINKS } from "@/config/links";
 
 export default function MobileNav() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -102,20 +103,32 @@ export default function MobileNav() {
 
         {/* Menu Links */}
         <nav className="flex flex-col items-center gap-6 text-xl tracking-widest relative z-10 font-mono">
-          {["HOME", "PRODUCTS", "ABOUT US", "COMMUNITY", "BLOG"].map((item, index) => (
+          {NAV_LINKS.map((item, index) => (
             <motion.div
-              key={item}
+              key={item.href}
               initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
               animate={{ opacity: menuOpen ? 1 : 0, y: menuOpen ? 0 : 30, filter: menuOpen ? "blur(0px)" : "blur(10px)" }}
               transition={{ delay: 0.1 + index * 0.1, duration: 0.6, ease: "easeOut" }}
             >
-              <Link
-                href={`#${item.toLowerCase().replace(/\s+/g, "")}`}
-                onClick={() => setMenuOpen(false)}
-                className="hover:text-black transition-colors duration-300"
-              >
-                <AnimatedLink value={item} />
-              </Link>
+              {item.external ? (
+                <a
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setMenuOpen(false)}
+                  className="hover:text-black transition-colors duration-300"
+                >
+                  <AnimatedLink value={item.label.toUpperCase()} />
+                </a>
+              ) : (
+                <Link
+                  href={item.href}
+                  onClick={() => setMenuOpen(false)}
+                  className="hover:text-black transition-colors duration-300"
+                >
+                  <AnimatedLink value={item.label.toUpperCase()} />
+                </Link>
+              )}
             </motion.div>
           ))}
         </nav>

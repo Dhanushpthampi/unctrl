@@ -1,3 +1,5 @@
+import { FOOTER_LINK_GROUPS } from "@/config/links";
+
 export default function Footer() {
 	return (
 		<footer className="bg-black text-white">
@@ -18,31 +20,30 @@ export default function Footer() {
 
 					{/* Navigation sections */}
 					<div className="flex flex-col sm:flex-row gap-8 sm:gap-12 lg:gap-24 text-lg sm:text-xl">
-						{/* First column */}
-						<div className="space-y-3 sm:space-y-4 text-right sm:text-left">
-							<a href="#" className="block hover:text-orange-500 transition-colors">Instagram</a>
-							<a href="#" className="block hover:text-orange-500 transition-colors">Reddit</a>
-							<a href="#" className="block hover:text-orange-500 transition-colors">Discord</a>
-							<a href="#" className="block hover:text-orange-500 transition-colors">Blog</a>
-						</div>
-						
-						{/* Second column */}
-						<div className="space-y-3 sm:space-y-4 text-right sm:text-left">
-							<a href="#" className="block hover:text-orange-500 transition-colors">Sitemap</a>
-							<a href="#" className="block hover:text-orange-500 transition-colors">Downloads</a>
-							<a href="#" className="block hover:text-orange-500 transition-colors">Join the community</a>
-						</div>
+						{FOOTER_LINK_GROUPS.map((group) => (
+							<div key={group.title} className="space-y-3 sm:space-y-4 text-right sm:text-left">
+								{group.links.map((link) => (
+									<a
+										key={`${group.title}-${link.label}`}
+										href={link.href}
+										className="block hover:text-orange-500 transition-colors"
+										// All footer links open in same tab as requested
+									>
+										{link.label}
+									</a>
+								))}
+							</div>
+						))}
 					</div>
 				</div>
 
 				{/* Bottom navigation */}
 				<div className="border-t border-gray-800 pt-6 sm:pt-8">
 					<div className="flex flex-row sm:gap-12 text-sm sm:text-base text-gray-400 text-center sm:text-left mb-15 sm:m-0 gap-4 sm:gap-8 lg:gap-12 justify-center sm:justify-start">
-						<a href="#" className="hover:text-white transition-colors">Login</a>
-						<a href="#" className="hover:text-white transition-colors">FAQs</a>
-						<a href="#" className="hover:text-white transition-colors">Support</a>
-						<a href="#" className="hover:text-white transition-colors">Privacy policy</a>
-						<a href="#" className="hover:text-white transition-colors">Terms and conditions</a>
+						<a href={"https://gameunctrl.com/pages/faqs"} className="hover:text-white transition-colors">FAQs</a>
+						<a href={"https://gameunctrl.com/pages/support"} className="hover:text-white transition-colors">Support</a>
+						<a href={"https://gameunctrl.com/pages/privacy-policy"} className="hover:text-white transition-colors">Privacy policy</a>
+						<a href={"https://gameunctrl.com/pages/terms-conditions"} className="hover:text-white transition-colors">Terms and conditions</a>
 					</div>
 				</div>
 			</div>
