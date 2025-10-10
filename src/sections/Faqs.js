@@ -1,8 +1,8 @@
 "use client";
 
 import Footer from "@/components/Footer";
-import { useEffect, useRef, useState } from "react";
-
+import { useRef } from "react";
+import { useState } from "react";
 const FAQ_ITEMS = [
   { q: "What is UNCTRL?", a: "UNCTRL is a next-gen modular gaming controller designed for precision and creativity on mobile devices." },
   { q: "When can I pre-order?", a: "Pre-orders open soon. Join the community to be notified the second it goes live." },
@@ -17,72 +17,32 @@ const FAQ_ITEMS = [
 export default function Faqs() {
   const videoRef = useRef(null);
 
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    const ensurePlay = async () => {
-      try {
-        video.muted = true;
-        await video.play();
-      } catch {
-        const onUserInteract = async () => {
-          try {
-            await video.play();
-          } catch {}
-          window.removeEventListener("pointerdown", onUserInteract);
-        };
-        window.addEventListener("pointerdown", onUserInteract, { once: true });
-      }
-    };
-
-    const onEnded = () => {
-      video.currentTime = 0;
-      video.play().catch(() => {});
-    };
-
-    video.addEventListener("ended", onEnded);
-    if (video.readyState >= 2) {
-      ensurePlay();
-    } else {
-      video.addEventListener("loadeddata", ensurePlay, { once: true });
-    }
-
-    return () => {
-      video.removeEventListener("ended", onEnded);
-    };
-  }, []);
-
   return (
     <section id="faqs" className="relative bg-transparent text-white overflow-hidden">
-      {/* Glitch background ONLY behind FAQ content */}
-      <div className="relative min-h-[100svh]">
-        {/* Video background */}
-        <video
-          ref={videoRef}
-          src="/assets/videos/glitch-bg.mp4"
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="auto"
-          className="absolute inset-0 -z-20 w-full h-full object-cover"
-          aria-hidden
-        />
+      {/* Video background */}
+      <video
+        ref={videoRef}
+        src="/assets/videos/glitch-bg.mp4"
+        autoPlay
+        loop
+        muted
+        playsInline
+        preload="metadata" // lighter load
+        className="absolute inset-0 -z-20 w-full h-full object-cover"
+        aria-hidden
+      />
 
-        {/* Content */}
-        <div className="relative z-10 max-w-3xl mx-auto container-px py-12 sm:py-16 md:pt-24 lg:pt-28">
-          {/* ↑ Added responsive top padding for md/lg screens */}
-          <h2 className="h2 text-center mb-8 text-3xl sm:text-4xl font-bold">FAQs</h2>
-          <div className="space-y-3">
-            {FAQ_ITEMS.map((item, idx) => (
-              <AccordionItem key={idx} index={idx + 1} q={item.q} a={item.a} />
-            ))}
-          </div>
+      {/* FAQ Content */}
+      <div className="relative z-10 max-w-3xl mx-auto container-px py-12 sm:py-16 md:pt-24 lg:pt-28">
+        <h2 className="h2 text-center mb-8 text-3xl sm:text-4xl font-bold">FAQs</h2>
+        <div className="space-y-3">
+          {FAQ_ITEMS.map((item, idx) => (
+            <AccordionItem key={idx} index={idx + 1} q={item.q} a={item.a} />
+          ))}
         </div>
       </div>
 
-      {/* Footer outside glitch container */}
+      {/* Footer */}
       <Footer className="relative z-10" />
     </section>
   );
@@ -125,4 +85,3 @@ function AccordionItem({ index, q, a }) {
     </div>
   );
 }
-  

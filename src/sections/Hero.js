@@ -1,44 +1,23 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-
 export default function Hero() {
-  const videoRef = useRef(null);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-    
-    video.play().catch(() => {
-      video.muted = true;
-      video.play().catch(() => {});
-    });
-  }, [isMobile]);
-
   return (
     <section id="home" className="relative w-full h-screen bg-black overflow-hidden">
+      {/* Hero Video with responsive sources */}
       <video
-        ref={videoRef}
-        className={isMobile 
-          ? "w-full h-full object-cover object-bottom" 
-          : "absolute top-[-80px] left-0 w-full h-[calc(100vh+80px)] object-cover"
-        }
-        src={isMobile ? "/assets/videos/mm.mp4" : "/assets/videos/mouth.mp4"}
         autoPlay
         loop
         muted
         playsInline
-        preload="auto"
-      />
-      
+        preload="metadata"
+        poster="/assets/images/hero-poster.jpg" // lightweight fallback image
+        className="absolute inset-0 w-full h-full object-cover"
+      >
+        {/* Mobile video */}
+        <source src="/assets/videos/mm.mp4" media="(max-width: 768px)" type="video/mp4" />
+        {/* Desktop video */}
+        <source src="/assets/videos/mouth.mp4" media="(min-width: 769px)" type="video/mp4" />
+      </video>
     </section>
   );
 }

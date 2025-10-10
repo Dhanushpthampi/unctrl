@@ -1,15 +1,16 @@
 "use client";
+
 import Image from "next/image";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 import { useEffect } from "react";
 
 export default function ComingSoon() {
-  const y = useMotionValue(0);
   const x = useMotionValue(0);
+  const y = useMotionValue(0);
   const rotation = useMotionValue(0);
 
-  const springY = useSpring(y, { stiffness: 120, damping: 20 });
   const springX = useSpring(x, { stiffness: 120, damping: 20 });
+  const springY = useSpring(y, { stiffness: 120, damping: 20 });
   const springRotation = useSpring(rotation, { stiffness: 120, damping: 20 });
 
   useEffect(() => {
@@ -17,24 +18,22 @@ export default function ComingSoon() {
     if (!community) return;
 
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            rotation.set(450);
-            y.set(window.innerHeight * 1.2 );
-          } else {
-            rotation.set(0);
-            y.set(0);
-            x.set(0);
-          }
-        });
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          rotation.set(450);
+          y.set(window.innerHeight * 1.2);
+        } else {
+          rotation.set(0);
+          y.set(0);
+          x.set(0);
+        }
       },
       { threshold: 0.3 }
     );
 
     observer.observe(community);
     return () => observer.disconnect();
-  }, [y, x, rotation]);
+  }, [x, y, rotation]);
 
   return (
     <section
@@ -48,24 +47,16 @@ export default function ComingSoon() {
         </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center m-4 sm:m-10 relative">
-          {/* First video */}
           <video
             src="/assets/comingsoon/kk.mp4"
             autoPlay
             loop
             muted
             playsInline
-            className="
-              w-[85%] sm:w-full 
-              mx-auto 
-              h-auto object-cover 
-              aspect-square  
-              shadow-[6px_6px_0px_0px_rgba(255,255,0,1)]
-              rounded-lg
-            "
+            preload="metadata"
+            className="w-[85%] sm:w-full mx-auto h-auto object-cover aspect-square shadow-[6px_6px_0px_0px_rgba(255,255,0,1)] rounded-lg"
           />
 
-          {/* Second video */}
           <div className="relative w-full h-full flex items-center justify-center">
             <video
               src="/assets/comingsoon/mousee.mp4"
@@ -73,37 +64,19 @@ export default function ComingSoon() {
               loop
               muted
               playsInline
-              className="
-                w-[85%] sm:w-full 
-                mx-auto 
-                h-auto object-cover z-20
-                aspect-square  
-                shadow-[6px_6px_0px_0px_rgba(138,43,226,1)]
-                rounded-lg
-              "
+              preload="metadata"
+              className="w-[85%] sm:w-full mx-auto h-auto object-cover z-20 aspect-square shadow-[6px_6px_0px_0px_rgba(138,43,226,1)] rounded-lg"
             />
           </div>
 
-          {/* Violet pixel motion */}
           <motion.div
             className="absolute top-1/2 z-10"
-            style={{
-              y: springY,
-              x: springX,
-              rotate: springRotation,
-              left: "60%",
-            }}
+            style={{ x: springX, y: springY, rotate: springRotation, left: "60%" }}
           >
-            <Image
-              src="/images/violetPixel.png"
-              width={150}
-              height={150}
-              alt="violet pixel"
-            />
+            <Image src="/images/violetPixel.png" width={150} height={150} alt="violet pixel" />
           </motion.div>
         </div>
       </div>
-      
     </section>
   );
 }
