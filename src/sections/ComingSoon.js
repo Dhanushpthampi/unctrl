@@ -103,6 +103,7 @@ export default function ComingSoon() {
           </motion.div>
         </div>
       </div>
+      
     </section>
   );
 }

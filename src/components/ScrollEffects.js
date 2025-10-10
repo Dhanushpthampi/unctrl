@@ -74,33 +74,11 @@ export default function ScrollEffects({ children }) {
     };
     waitForMain();
 
-    const navByKey = (e) => {
-      if (!["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End"].includes(e.key)) return;
-      const main = document.querySelector("main");
-      if (!main) return;
-      const viewportSections = Array.from(main.querySelectorAll("section, footer, [data-section]"));
-      if (!viewportSections.length) return;
-
-      const mid = window.scrollY + window.innerHeight / 2;
-      const idx = Math.max(
-        0,
-        viewportSections.findIndex((s) => s.offsetTop <= mid && s.offsetTop + s.offsetHeight > mid)
-      );
-
-      let next = idx;
-      if (e.key === "ArrowDown" || e.key === "PageDown") next = Math.min(idx + 1, viewportSections.length - 1);
-      if (e.key === "ArrowUp" || e.key === "PageUp") next = Math.max(idx - 1, 0);
-      if (e.key === "Home") next = 0;
-      if (e.key === "End") next = viewportSections.length - 1;
-
-      viewportSections[next]?.scrollIntoView({ behavior: "smooth", block: "start" });
-    };
-
-    window.addEventListener("keydown", navByKey);
+    // Removed arrow-key navigation per request; default browser scroll behavior remains
 
     return () => {
       cancelled = true;
-      window.removeEventListener("keydown", navByKey);
+      // no keydown listener to remove
       if (ioRef.current) try { ioRef.current.disconnect(); } catch (e) {}
       if (mutationRef.current) mutationRef.current.disconnect();
     };

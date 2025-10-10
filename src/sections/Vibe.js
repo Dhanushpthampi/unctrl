@@ -160,6 +160,7 @@ export default function Vibe() {
 
   return (
     <section 
+      id="vibe"
       ref={sectionRef}
       className="relative min-h-[100vh] bg-black flex flex-col justify-center items-center pt-20 pb-5"
     >
@@ -189,6 +190,8 @@ export default function Vibe() {
           </div>
         </div>
       </div>
+
+      
 
       <style jsx global>{`
         .vibe-swiper {

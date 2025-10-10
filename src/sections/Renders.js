@@ -1,5 +1,6 @@
 "use client";
 
+
 export default function Renders() {
   return (
     <section
@@ -41,6 +42,8 @@ export default function Renders() {
           Level up your gaming
         </span>
       </div>
+      
+      
     </section>
   );
 }

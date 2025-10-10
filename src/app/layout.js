@@ -1,6 +1,7 @@
 import { Chakra_Petch } from "next/font/google";
 import "./globals.css";
 import ScrollEffects from "@/components/ScrollEffects";
+import ScrollDownIndicator from "@/components/ScrollDownIndicator";
 import SiteHeader from "@/components/SiteHeader";
 
 const chakra = Chakra_Petch({
@@ -37,6 +38,7 @@ export default function RootLayout({ children, showIntroOverlay }) {
         <ScrollEffects>
           <SiteHeader />
           {children}
+          <ScrollDownIndicator />
         </ScrollEffects>
       </body>
     </html>

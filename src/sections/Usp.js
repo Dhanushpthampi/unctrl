@@ -56,12 +56,13 @@ export default function Usp() {
     <section
       id="usp"
       ref={sectionRef}
-      className="relative min-h-[100svh] bg-black flex items-center justify-center"
+      className="relative w-screen max-w-[100vw] min-h-[100svh] bg-black overflow-hidden flex items-center justify-center"
     >
-      <div className="w-full sm:w-[95vw] aspect-[16/9] max-w-[1600px] flex justify-center items-center overflow-hidden">
+      <div className="w-full sm:w-[95vw] max-w-[100vw] aspect-[16/9] flex justify-center items-center overflow-hidden">
         {/* Always mount the scene so assets are ready; animate in on visibility */}
         <ControllerScene animateIn={isVisible} />
       </div>
+      
     </section>
   );
 }

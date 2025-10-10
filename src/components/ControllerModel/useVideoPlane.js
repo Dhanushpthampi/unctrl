@@ -72,7 +72,6 @@ export default function useVideoPlane({ nodes, scene, videoIndex, videoRef, plan
 
     const buildPaths = (idx) => [
       `/assets/usps/${idx}.png`,
-      `/assets/usps/${idx}.webp`,
     ];
 
     const setMaterialMap = (texture) => {
@@ -156,9 +155,6 @@ export default function useVideoPlane({ nodes, scene, videoIndex, videoRef, plan
 
     const buildPaths = (idx) => [
       `/assets/usps/${idx}.png`,
-      `/assets/usps/${idx}.webp`,
-      `/assets/usps/${idx}.jpg`,
-      `/assets/usps/${idx}.jpeg`,
     ];
 
     const setMaterialMap = (texture) => {

@@ -38,6 +38,7 @@ export default function Hero() {
         playsInline
         preload="auto"
       />
+      
     </section>
   );
 }
