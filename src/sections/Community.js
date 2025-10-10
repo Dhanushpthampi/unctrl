@@ -38,21 +38,21 @@ export default function Community() {
         </video>
 
         {/* Pixels centered horizontally at the bottom */}
-        <div
-          className="absolute bottom-0 sm:-bottom-20 left-1/2 flex items-end"
-          style={{
-            gap: "180px",
-            transform: "translateX(-130%)", // slightly more to the left
-          }}
-        >
-          <Image
-            src="/images/yellowPixel.png"
-            width={200}
-            height={200}
-            alt="yellow pixel"
-            className="w-[200px] h-[200px] "
-          />
-        </div>
+<div
+  className="absolute bottom-0 sm:-bottom-10 left-1/2"
+  style={{
+    gap: "180px",
+    transform: "translateX(-130%)", // keep perfectly centered
+  }}
+>
+  <Image
+    src="/images/yellowPixel.png"
+    width={200}
+    height={200}
+    alt="yellow pixel"
+    className="w-[200px] h-[200px] min-w-[200px] min-h-[200px] object-contain"
+  />
+</div>
 
         <div className="absolute inset-0 pointer-events-none" />
         

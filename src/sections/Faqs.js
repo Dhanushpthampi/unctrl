@@ -25,9 +25,11 @@ export default function Faqs() {
       try {
         video.muted = true;
         await video.play();
-      } catch (_) {
+      } catch {
         const onUserInteract = async () => {
-          try { await video.play(); } catch {}
+          try {
+            await video.play();
+          } catch {}
           window.removeEventListener("pointerdown", onUserInteract);
         };
         window.addEventListener("pointerdown", onUserInteract, { once: true });
@@ -69,7 +71,8 @@ export default function Faqs() {
         />
 
         {/* Content */}
-        <div className="relative z-10 max-w-3xl mx-auto container-px py-12 sm:py-16">
+        <div className="relative z-10 max-w-3xl mx-auto container-px py-12 sm:py-16 md:pt-24 lg:pt-28">
+          {/* ↑ Added responsive top padding for md/lg screens */}
           <h2 className="h2 text-center mb-8 text-3xl sm:text-4xl font-bold">FAQs</h2>
           <div className="space-y-3">
             {FAQ_ITEMS.map((item, idx) => (
@@ -122,3 +125,4 @@ function AccordionItem({ index, q, a }) {
     </div>
   );
 }
+  

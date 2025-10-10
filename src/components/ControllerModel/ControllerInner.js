@@ -4,7 +4,7 @@ import { useThree } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
 import { useState, useEffect, useRef } from "react";
-import useImagePlane from "./useImagePlane";
+import useImagePlane from "./useVideoPlane"; 
 import useButtonInteraction from "./useButtonInteraction";
 
 // Lazy preload GLB
