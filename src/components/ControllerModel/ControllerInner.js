@@ -2,39 +2,38 @@
 
 import { useThree } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
+import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
 import { useState, useEffect, useRef } from "react";
 import useImagePlane from "./useImagePlane";
 import useButtonInteraction from "./useButtonInteraction";
 
-useGLTF.preload("/models/c3.glb");
-// Preload a couple of USPS textures during idle time to reduce first swap delay
+// Lazy preload GLB
 if (typeof window !== "undefined") {
+  useGLTF.preload("/models/c3d.glb");
   requestIdleCallback?.(() => {
-    const link = document.createElement("link");
-    link.rel = "preload";
-    link.as = "image";
-    link.href = "/assets/usps/1.webp";
-    document.head.appendChild(link);
-    const link2 = document.createElement("link");
-    link2.rel = "preload";
-    link2.as = "image";
-    link2.href = "/assets/usps/2.webp";
-    document.head.appendChild(link2);
+    ["/assets/usps/1.webp", "/assets/usps/2.webp"].forEach((src) => {
+      const img = new Image();
+      img.decoding = "async";
+      img.loading = "eager";
+      img.src = src;
+    });
   });
 }
 
 export default function ControllerInner() {
-  const { scene, nodes } = useGLTF("/models/c3.glb");
+  // Setup Draco loader
+  const dracoLoader = new DRACOLoader();
+  dracoLoader.setDecoderPath("/draco/"); // Put draco_decoder.js + draco_wasm_wrapper.js in /public/draco
+
+  const { scene, nodes } = useGLTF("/models/c3d.glb", true, undefined, dracoLoader);
   const { gl, camera, invalidate } = useThree();
   const [videoIndex, setVideoIndex] = useState(1);
   const videoRef = useRef(null);
   const planeRef = useRef(null);
 
-  const changeVideo = () => {
-    setVideoIndex((prev) => (prev >= 5 ? 1 : prev + 1));
-  };
+  const changeVideo = () => setVideoIndex((prev) => (prev >= 5 ? 1 : prev + 1));
 
-  // setup model scale/pos once
+  // Setup model scale/position once
   useEffect(() => {
     if (!scene) return;
     scene.scale.setScalar(0.2);
@@ -42,16 +41,11 @@ export default function ControllerInner() {
     scene.rotation.set(0, 0, 0);
   }, [scene]);
 
-  // plane & video
+  // Plane & video logic
   useImagePlane({ nodes, scene, videoIndex, videoRef, planeRef, invalidate });
 
-  // button glow + click logic
-  useButtonInteraction({
-    button: nodes.left_buttons,
-    gl,
-    camera,
-    changeVideo,
-  });
+  // Button glow + click logic
+  useButtonInteraction({ button: nodes.left_buttons, gl, camera, changeVideo });
 
   return <primitive object={scene} />;
 }

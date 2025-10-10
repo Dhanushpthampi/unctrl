@@ -18,23 +18,19 @@ export default function RootLayout({ children, showIntroOverlay }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Highest priority: 3D model for ControllerScene */}
-        <link rel="preload" href="/models/c3.glb" as="fetch" crossOrigin="anonymous" />
-        {/* Preload Hero videos so Hero is seamless after intro */}
+        {/* Preload Draco GLB */}
+        <link rel="preload" href="/models/c3d.glb" as="fetch" crossOrigin="anonymous" />
+
+        {/* Preload Hero videos */}
         <link rel="preload" as="video" href="/assets/videos/mouth.mp4" />
         <link rel="preload" as="video" href="/assets/videos/mm.mp4" media="(max-width: 768px)" />
-        {/* Keep intro videos as prefetch to reduce contention */}
+
+        {/* Prefetch intro videos */}
         <link rel="prefetch" as="video" href="/assets/videos/intro.mp4" />
         <link rel="prefetch" as="video" href="/assets/videos/introVertical.mp4" media="(max-width: 768px)" />
       </head>
-      <body
-        suppressHydrationWarning
-        className={`${chakra.variable} antialiased bg-[#020104] text-white`}
-      >
-        {/* Intro overlay rendered ABOVE everything */}
+      <body className={`${chakra.variable} antialiased bg-[#020104] text-white`}>
         {showIntroOverlay}
-
-        {/* Rest of the site */}
         <ScrollEffects>
           <SiteHeader />
           {children}

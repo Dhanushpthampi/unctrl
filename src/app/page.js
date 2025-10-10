@@ -19,19 +19,18 @@ export default function Home() {
   return (
     <main className="w-full overflow-x-hidden">
       {showIntro && <IntroOverlay onFinished={() => setShowIntro(false)} />}
-      
-      {!showIntro && (
-        <>
-          <Hero />
-          <Story />
-          <Renders />
-          <Usp />
-          <Vibe />
-          <ComingSoon />
-          <Community />
-          <Faqs />
-        </>
-      )}
+
+      {/* Always render sections so their assets start loading under the intro overlay */}
+      <>
+        <Hero />
+        <Story />
+        <Renders />
+        <Usp />
+        <Vibe />
+        <ComingSoon />
+        <Community />
+        <Faqs />
+      </>
     </main>
   );
 }
