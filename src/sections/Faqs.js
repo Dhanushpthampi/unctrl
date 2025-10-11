@@ -3,6 +3,8 @@
 import Footer from "@/components/Footer";
 import { useRef } from "react";
 import { useState } from "react";
+import { ASSETS } from "../const/assets";
+
 const FAQ_ITEMS = [
   { q: "What is UNCTRL?", a: "UNCTRL is a next-gen modular gaming controller designed for precision and creativity on mobile devices." },
   { q: "When can I pre-order?", a: "Pre-orders open soon. Join the community to be notified the second it goes live." },
@@ -22,12 +24,12 @@ export default function Faqs() {
       {/* Video background */}
       <video
         ref={videoRef}
-        src="/assets/videos/glitch-bg.mp4"
+        src={ASSETS.glitch}
         autoPlay
         loop
         muted
         playsInline
-        preload="metadata" // lighter load
+        preload="metadata"
         className="absolute inset-0 -z-20 w-full h-full object-cover"
         aria-hidden
       />

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 import { useEffect } from "react";
+import { ASSETS } from "../const/assets";
 
 export default function ComingSoon() {
   const x = useMotionValue(0);
@@ -48,7 +49,7 @@ export default function ComingSoon() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center m-4 sm:m-10 relative">
           <video
-            src="/assets/comingsoon/kk.mp4"
+            src={ASSETS.keyboard}
             autoPlay
             loop
             muted
@@ -59,7 +60,7 @@ export default function ComingSoon() {
 
           <div className="relative w-full h-full flex items-center justify-center">
             <video
-              src="/assets/comingsoon/mousee.mp4"
+              src={ASSETS.mouse}
               autoPlay
               loop
               muted

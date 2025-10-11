@@ -1,20 +1,20 @@
-// file: src/sections/Vibe.js
 "use client";
 
 import React, { useRef, useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import CoinMan from "../components/CoinMan";
+import { ASSETS } from "../const/assets";
 
 const videos = [
-  "/assets/vibe/1.mp4",
-  "/assets/vibe/2.mp4",
-  "/assets/vibe/3.mp4",
-  "/assets/vibe/4.mp4",
-  "/assets/vibe/5.mp4",
-  "/assets/vibe/6.mp4",
-  "/assets/vibe/7.mp4",
-  "/assets/vibe/8.mp4",
+  ASSETS.vibe1,
+  ASSETS.vibe2,
+  ASSETS.vibe3,
+  ASSETS.vibe4,
+  ASSETS.vibe5,
+  ASSETS.vibe6,
+  ASSETS.vibe7,
+  ASSETS.vibe8,
 ];
 
 function VideoCard({ src, isVisible }) {
@@ -22,8 +22,6 @@ function VideoCard({ src, isVisible }) {
 
   useEffect(() => {
     if (!videoRef.current) return;
-    
-    // Play/pause based on visibility
     if (isVisible) {
       videoRef.current.play().catch(() => {});
     } else {
@@ -35,11 +33,11 @@ function VideoCard({ src, isVisible }) {
     <div className="video-card">
       <video
         ref={videoRef}
-        src={src} // Load src immediately, not on intersection
+        src={src}
         muted
         loop
         playsInline
-        preload="metadata" // Changed from "auto" to load faster
+        preload="metadata"
         className="video-el"
         draggable={false}
       />
@@ -61,8 +59,8 @@ function Row({ onReady, space = 30, activeIndex = 0 }) {
       >
         {videos.map((src, i) => (
           <SwiperSlide key={i} className="vibe-slide">
-            <VideoCard 
-              src={src} 
+            <VideoCard
+              src={src}
               isVisible={i === activeIndex || i === (activeIndex + 1) % videos.length}
             />
           </SwiperSlide>
@@ -81,39 +79,26 @@ export default function Vibe() {
   const [topIndex, setTopIndex] = useState(0);
   const [bottomIndex, setBottomIndex] = useState(0);
 
-  // Animation settings
   const stepSlides = 1;
   const slideDurationMs = 300;
   const pauseBetweenRowsMs = 300;
   const pauseBetweenCyclesMs = 1000;
 
-  // Detect when section is in viewport
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsInView(entry.isIntersecting);
-      },
-      { rootMargin: "200px" } // Start loading 200px before visible
+      ([entry]) => setIsInView(entry.isIntersecting),
+      { rootMargin: "200px" }
     );
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
-      }
-    };
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => sectionRef.current && observer.unobserve(sectionRef.current);
   }, []);
 
   useEffect(() => {
-    if (!isInView) return; // Only animate when in view
+    if (!isInView) return;
 
     let cancelled = false;
-
     const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-
     const waitForTransition = (swiper) =>
       new Promise((resolve) => {
         const handler = () => {
@@ -123,15 +108,15 @@ export default function Vibe() {
         swiper.on("transitionEnd", handler);
       });
 
-    const moveSteps = async (swiper, direction = "forward", steps = 3, updateIndex) => {
+    const moveSteps = async (swiper, direction, steps, updateIndex) => {
       if (!swiper) return;
       for (let i = 0; i < steps && !cancelled; i++) {
         if (direction === "forward") {
           swiper.slideNext(slideDurationMs, true);
-          if (updateIndex) updateIndex((prev) => (prev + 1) % videos.length);
+          updateIndex?.((p) => (p + 1) % videos.length);
         } else {
           swiper.slidePrev(slideDurationMs, true);
-          if (updateIndex) updateIndex((prev) => (prev - 1 + videos.length) % videos.length);
+          updateIndex?.((p) => (p - 1 + videos.length) % videos.length);
         }
         await waitForTransition(swiper);
       }
@@ -140,13 +125,10 @@ export default function Vibe() {
     const run = async () => {
       if (runningRef.current) return;
       runningRef.current = true;
-
       while (!cancelled) {
-        if (topRef.current)
-          await moveSteps(topRef.current, "forward", stepSlides, setTopIndex);
+        if (topRef.current) await moveSteps(topRef.current, "forward", stepSlides, setTopIndex);
         await sleep(pauseBetweenRowsMs);
-        if (bottomRef.current)
-          await moveSteps(bottomRef.current, "backward", stepSlides, setBottomIndex);
+        if (bottomRef.current) await moveSteps(bottomRef.current, "backward", stepSlides, setBottomIndex);
         await sleep(pauseBetweenCyclesMs);
       }
     };
@@ -159,39 +141,24 @@ export default function Vibe() {
   }, [isInView]);
 
   return (
-    <section 
+    <section
       id="vibe"
       ref={sectionRef}
       className="relative min-h-[100vh] bg-black flex flex-col justify-center items-center pt-20 pb-5"
     >
       <div className="w-full max-w-[1600px] px-4 md:px-6 relative flex flex-col items-center space-y-4 md:space-y-6">
-        {/* Top row */}
-        <Row
-          onReady={(s) => {
-            topRef.current = s;
-          }}
-          activeIndex={topIndex}
-        />
+        <Row onReady={(s) => (topRef.current = s)} activeIndex={topIndex} />
 
-        {/* Bottom row with horizontal offset */}
         <div className="bottom-row-offset w-full z-30">
-          <Row
-            onReady={(s) => {
-              bottomRef.current = s;
-            }}
-            activeIndex={bottomIndex}
-          />
+          <Row onReady={(s) => (bottomRef.current = s)} activeIndex={bottomIndex} />
         </div>
 
-        {/* CoinMan overlay */}
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-15 pointer-events-none">
           <div className="pointer-events-auto">
             <CoinMan />
           </div>
         </div>
       </div>
-
-      
 
       <style jsx global>{`
         .vibe-swiper {
@@ -218,7 +185,6 @@ export default function Vibe() {
           will-change: transform;
           transform: translateZ(0);
           backface-visibility: hidden;
-          -webkit-backface-visibility: hidden;
         }
         .bottom-row-offset {
           transform: translateX(-112px);

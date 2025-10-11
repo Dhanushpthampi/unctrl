@@ -2,42 +2,52 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { ASSETS } from "../const/assets";
 
 export default function IntroOverlay({ onFinished }) {
   const videoRef = useRef(null);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const [isFadingOut, setIsFadingOut] = useState(false);
-  const [videoSrc, setVideoSrc] = useState("/assets/videos/intro.mp4");
+  const [videoSrc, setVideoSrc] = useState(ASSETS.intro);
 
+  // Determine correct video source (desktop vs mobile)
   useEffect(() => {
     if (typeof window === "undefined") return;
+
+    const updateVideoSrc = () => {
+      if (window.innerWidth <= 768) {
+        setVideoSrc(ASSETS.introV); // vertical version for mobile
+      } else {
+        setVideoSrc(ASSETS.intro); // desktop version
+      }
+    };
+
+    updateVideoSrc();
+    window.addEventListener("resize", updateVideoSrc);
+
+    return () => window.removeEventListener("resize", updateVideoSrc);
+  }, []);
+
+  // Handle video events: canplay & ended
+  useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    // Pick correct video version
-    if (window.innerWidth <= 768) {
-      setVideoSrc("/assets/videos/introVertical.mp4");
-    }
-
-    // When video can start playing
     const handleCanPlay = () => setIsVideoLoaded(true);
-
-    // When video ends → fade out before finishing
     const handleEnd = () => {
       setIsFadingOut(true);
-      // Wait for fade-out to complete before calling onFinished
       setTimeout(() => onFinished?.(), 700);
     };
 
     video.addEventListener("canplay", handleCanPlay);
     video.addEventListener("ended", handleEnd);
 
-    // Start loading & autoplay
+    // Start video
     video.currentTime = 0;
     video.load();
     video.play().catch(() => {});
 
-    // Preload heavy 3D assets while video plays
+    // Preload heavy 3D assets
     import("@/components/ControllerModel/preloadAssets")
       .then((m) => m.preloadControllerAssets?.())
       .catch(() => {});
@@ -47,16 +57,7 @@ export default function IntroOverlay({ onFinished }) {
       video.removeEventListener("ended", handleEnd);
       video.pause();
     };
-  }, [onFinished]);
-
-  // Replay when source changes (mobile vs desktop)
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-    setIsVideoLoaded(false);
-    video.load();
-    video.play().catch(() => {});
-  }, [videoSrc]);
+  }, [videoSrc, onFinished]);
 
   return (
     <div
@@ -77,7 +78,7 @@ export default function IntroOverlay({ onFinished }) {
         muted
         playsInline
         autoPlay
-        preload="auto"
+        preload="metadata" // better for initial load
       />
     </div>
   );

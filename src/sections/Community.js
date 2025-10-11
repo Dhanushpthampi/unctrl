@@ -1,8 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import UnCtrlButton from "@/components/UnCtrlButton";
-import { CTA_LINKS } from "@/config/links";
+import UnCtrlButton from "../components/UnCtrlButton";
+import { CTA_LINKS } from "../config/links";
+import { ASSETS } from "../const/assets";
 
 export default function Community() {
   return (
@@ -19,8 +20,8 @@ export default function Community() {
         preload="metadata"
         className="absolute inset-0 w-full h-full object-cover"
       >
-        <source src="/assets/videos/communityVertical.mp4" media="(max-width: 768px)" type="video/mp4" />
-        <source src="/assets/videos/community.mp4" media="(min-width: 769px)" type="video/mp4" />
+        <source src={ASSETS.communityV} media="(max-width: 768px)" type="video/mp4" />
+        <source src={ASSETS.community} media="(min-width: 769px)" type="video/mp4" />
       </video>
 
       {/* Pixel decoration */}
@@ -42,7 +43,7 @@ export default function Community() {
 
       {/* CTA button */}
       <div className="relative z-20 w-full flex justify-center pb-24">
-        <UnCtrlButton href={CTA_LINKS.joinCommunity}  external>
+        <UnCtrlButton href={CTA_LINKS.joinCommunity} external>
           <h1>JOIN THE CHAOS</h1>
         </UnCtrlButton>
       </div>
