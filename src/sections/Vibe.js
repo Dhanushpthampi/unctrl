@@ -6,15 +6,13 @@ import "swiper/css";
 import CoinMan from "../components/CoinMan";
 import { ASSETS } from "../const/assets";
 
-const videos = [
+const allVideos = [
   ASSETS.vibe1,
   ASSETS.vibe2,
   ASSETS.vibe3,
   ASSETS.vibe4,
   ASSETS.vibe5,
   ASSETS.vibe6,
-  ASSETS.vibe7,
-  ASSETS.vibe8,
 ];
 
 function VideoCard({ src, isVisible }) {
@@ -45,7 +43,7 @@ function VideoCard({ src, isVisible }) {
   );
 }
 
-function Row({ onReady, space = 30, activeIndex = 0 }) {
+function Row({ videos, onReady, space = 30, activeIndex = 0 }) {
   return (
     <div className="w-full relative z-10">
       <Swiper
@@ -78,11 +76,25 @@ export default function Vibe() {
   const sectionRef = useRef(null);
   const [topIndex, setTopIndex] = useState(0);
   const [bottomIndex, setBottomIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
 
   const stepSlides = 1;
   const slideDurationMs = 300;
   const pauseBetweenRowsMs = 300;
   const pauseBetweenCyclesMs = 1000;
+
+  // Detect mobile on mount and resize
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Use 4 videos on mobile, 6 on desktop
+  const videosToUse = isMobile ? allVideos.slice(0, 4) : allVideos;
+  const topVideos = [...videosToUse.slice(0, videosToUse.length / 2), ...videosToUse.slice(0, videosToUse.length / 2)];
+  const bottomVideos = [...videosToUse.slice(videosToUse.length / 2), ...videosToUse.slice(videosToUse.length / 2)];
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -108,15 +120,15 @@ export default function Vibe() {
         swiper.on("transitionEnd", handler);
       });
 
-    const moveSteps = async (swiper, direction, steps, updateIndex) => {
+    const moveSteps = async (swiper, direction, steps, updateIndex, videoCount) => {
       if (!swiper) return;
       for (let i = 0; i < steps && !cancelled; i++) {
         if (direction === "forward") {
           swiper.slideNext(slideDurationMs, true);
-          updateIndex?.((p) => (p + 1) % videos.length);
+          updateIndex?.((p) => (p + 1) % videoCount);
         } else {
           swiper.slidePrev(slideDurationMs, true);
-          updateIndex?.((p) => (p - 1 + videos.length) % videos.length);
+          updateIndex?.((p) => (p - 1 + videoCount) % videoCount);
         }
         await waitForTransition(swiper);
       }
@@ -126,9 +138,9 @@ export default function Vibe() {
       if (runningRef.current) return;
       runningRef.current = true;
       while (!cancelled) {
-        if (topRef.current) await moveSteps(topRef.current, "forward", stepSlides, setTopIndex);
+        if (topRef.current) await moveSteps(topRef.current, "forward", stepSlides, setTopIndex, topVideos.length);
         await sleep(pauseBetweenRowsMs);
-        if (bottomRef.current) await moveSteps(bottomRef.current, "backward", stepSlides, setBottomIndex);
+        if (bottomRef.current) await moveSteps(bottomRef.current, "backward", stepSlides, setBottomIndex, bottomVideos.length);
         await sleep(pauseBetweenCyclesMs);
       }
     };
@@ -147,10 +159,10 @@ export default function Vibe() {
       className="relative min-h-[100vh] bg-black flex flex-col justify-center items-center pt-20 pb-5"
     >
       <div className="w-full max-w-[1600px] px-4 md:px-6 relative flex flex-col items-center space-y-4 md:space-y-6">
-        <Row onReady={(s) => (topRef.current = s)} activeIndex={topIndex} />
+        <Row videos={topVideos} onReady={(s) => (topRef.current = s)} activeIndex={topIndex} />
 
         <div className="bottom-row-offset w-full z-30">
-          <Row onReady={(s) => (bottomRef.current = s)} activeIndex={bottomIndex} />
+          <Row videos={bottomVideos} onReady={(s) => (bottomRef.current = s)} activeIndex={bottomIndex} />
         </div>
 
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-15 pointer-events-none">
