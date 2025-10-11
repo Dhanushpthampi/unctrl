@@ -23,8 +23,7 @@ export async function preloadControllerAssets() {
       requestIdleCallback(() => {
         const paths = [
           "/assets/usps/1.png",
-          "/assets/usps/2.png",
-          "/assets/usps/3.png",
+          "/assets/usps/2.png", 
         ];
         paths.forEach((src) => {
           const img = new Image();

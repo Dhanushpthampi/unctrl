@@ -86,7 +86,7 @@ export default function MobileNav() {
       <motion.div
         ref={overlayRef}
         className="fixed bottom-0 left-0 w-full z-[60] flex flex-col items-center justify-center text-white overflow-hidden"
-        animate={{ height: menuOpen ? "75vh" : "82px" }}
+        animate={{ height: menuOpen ? "60vh" : "82px" }}
         transition={{ duration: 0.4, ease: "easeInOut" }}
       >
         {/* Background */}
@@ -102,7 +102,7 @@ export default function MobileNav() {
         />
 
         {/* Menu Links */}
-        <nav className="flex flex-col items-center gap-6 text-xl tracking-widest relative z-10 font-mono">
+        <nav className="flex flex-col items-center gap-6 text-xl tracking-widest relative z-10 font-mono mb-10">
           {NAV_LINKS.map((item, index) => (
             <motion.div
               key={item.href}

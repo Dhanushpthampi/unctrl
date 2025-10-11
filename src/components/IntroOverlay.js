@@ -6,42 +6,38 @@ import { useEffect, useRef, useState } from "react";
 export default function IntroOverlay({ onFinished }) {
   const videoRef = useRef(null);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
-  // Keep src stable between SSR and initial client render to avoid hydration mismatch
+  const [isFadingOut, setIsFadingOut] = useState(false);
   const [videoSrc, setVideoSrc] = useState("/assets/videos/intro.mp4");
 
   useEffect(() => {
-    // After mount, adjust source based on device size
-    if (typeof window !== "undefined" && window.innerWidth <= 768) {
-      setVideoSrc("/assets/videos/introVertical.mp4");
-    }
-
+    if (typeof window === "undefined") return;
     const video = videoRef.current;
     if (!video) return;
 
+    // Pick correct video version
+    if (window.innerWidth <= 768) {
+      setVideoSrc("/assets/videos/introVertical.mp4");
+    }
+
+    // When video can start playing
     const handleCanPlay = () => setIsVideoLoaded(true);
-    const handleEnd = () => onFinished?.();
+
+    // When video ends → fade out before finishing
+    const handleEnd = () => {
+      setIsFadingOut(true);
+      // Wait for fade-out to complete before calling onFinished
+      setTimeout(() => onFinished?.(), 700);
+    };
 
     video.addEventListener("canplay", handleCanPlay);
     video.addEventListener("ended", handleEnd);
 
-    // Start loading and autoplay
-    const tryPlay = () => {
-      try {
-        video.currentTime = 0;
-      } catch {}
-      video.load();
-      const p = video.play();
-      if (p && typeof p.catch === "function") {
-        p.catch(() => {
-          // iOS/Safari may block autoplay until muted is set and play called again
-          video.muted = true;
-          video.play().catch(() => {});
-        });
-      }
-    };
-    tryPlay();
+    // Start loading & autoplay
+    video.currentTime = 0;
+    video.load();
+    video.play().catch(() => {});
 
-    // Kick off controller asset preloading ASAP in parallel with intro
+    // Preload heavy 3D assets while video plays
     import("@/components/ControllerModel/preloadAssets")
       .then((m) => m.preloadControllerAssets?.())
       .catch(() => {});
@@ -53,23 +49,20 @@ export default function IntroOverlay({ onFinished }) {
     };
   }, [onFinished]);
 
-  // Re-run play when the src changes after mount (mobile switch)
+  // Replay when source changes (mobile vs desktop)
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    // Reset load state for fade
     setIsVideoLoaded(false);
-    const p = video.play();
-    if (p && typeof p.catch === "function") {
-      p.catch(() => {
-        video.muted = true;
-        video.play().catch(() => {});
-      });
-    }
+    video.load();
+    video.play().catch(() => {});
   }, [videoSrc]);
 
   return (
-    <div className="fixed inset-0 z-[9999] bg-black flex items-center justify-center">
+    <div
+      className={`fixed inset-0 z-[9999] bg-black flex items-center justify-center transition-opacity duration-700
+      ${isFadingOut ? "opacity-0 pointer-events-none" : "opacity-100"}`}
+    >
       {!isVideoLoaded && (
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="w-12 h-12 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>

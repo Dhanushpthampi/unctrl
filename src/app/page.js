@@ -16,10 +16,10 @@ const Faqs = dynamic(() => import("@/sections/Faqs"));
 export default function Home() {
   const [showIntro, setShowIntro] = useState(true);
 
-  // Show intro only on first visit
   useEffect(() => {
     try {
-      const seen = typeof window !== "undefined" && window.localStorage.getItem("introSeen");
+      // Check if intro was already shown in this session
+      const seen = typeof window !== "undefined" && sessionStorage.getItem("introSeen");
       if (seen === "1") setShowIntro(false);
     } catch {}
   }, []);
@@ -30,14 +30,15 @@ export default function Home() {
         <IntroOverlay
           onFinished={() => {
             try {
-              window.localStorage.setItem("introSeen", "1");
+              // Mark intro as seen only for this browser session
+              sessionStorage.setItem("introSeen", "1");
             } catch {}
             setShowIntro(false);
           }}
         />
       )}
 
-      {/* Always render sections so their assets start loading under the intro overlay */}
+      {/* Always render sections so assets preload under intro */}
       <>
         <Hero />
         <Story />
