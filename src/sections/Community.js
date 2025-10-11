@@ -42,7 +42,7 @@ export default function Community() {
 
       {/* CTA button */}
       <div className="relative z-20 w-full flex justify-center pb-24">
-        <UnCtrlButton href={CTA_LINKS.joinCommunity} target="_blank" external>
+        <UnCtrlButton href={CTA_LINKS.joinCommunity}  external>
           <h1>JOIN THE CHAOS</h1>
         </UnCtrlButton>
       </div>

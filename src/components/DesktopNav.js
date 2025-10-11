@@ -26,7 +26,7 @@ export default function DesktopNav({ height = 78 }) {
               </Link>
             )
           ))}
-          <UnCtrlButton href={CTA_LINKS.orderNow} target="_blank" external>ORDER NOW</UnCtrlButton>
+          <UnCtrlButton href={CTA_LINKS.orderNow} external>ORDER NOW</UnCtrlButton>
         </nav>
       </div>
     </div>

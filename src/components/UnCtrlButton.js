@@ -27,8 +27,7 @@ const UnCtrlButton = ({ children, href, external = false, className, ...rest }) 
         <motion.a
           {...baseProps}
           className={combinedClass}
-          href={href}
-          target="_blank"
+          href={href} 
           rel="noopener noreferrer"
           {...rest}
         >
@@ -37,7 +36,7 @@ const UnCtrlButton = ({ children, href, external = false, className, ...rest }) 
       );
     }
     return (
-      <Link href={href} {...rest} target="_blank" legacyBehavior>
+      <Link href={href} {...rest}   legacyBehavior>
         <motion.a {...baseProps} className={combinedClass}>
           {children}
         </motion.a>
