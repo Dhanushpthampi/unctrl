@@ -47,10 +47,10 @@ export default function IntroOverlay({ onFinished }) {
     video.load();
     video.play().catch(() => {});
 
-    // Preload heavy 3D assets
-    import("@/components/ControllerModel/preloadAssets")
-      .then((m) => m.preloadControllerAssets?.())
-      .catch(() => {});
+    // // Preload heavy 3D assets
+    // import("@/components/ControllerModel/preloadAssets")
+    //   .then((m) => m.preloadControllerAssets?.())
+    //   .catch(() => {});
 
     return () => {
       video.removeEventListener("canplay", handleCanPlay);

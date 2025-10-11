@@ -7,7 +7,7 @@ import Hero from "@/sections/Hero";
 
 const Story = dynamic(() => import("@/sections/Story"));
 const Renders = dynamic(() => import("@/sections/Renders"));
-const Usp = dynamic(() => import("@/sections/Usp"));
+// const Usp = dynamic(() => import("@/sections/Usp"));
 const Vibe = dynamic(() => import("@/sections/Vibe"));
 const ComingSoon = dynamic(() => import("@/sections/ComingSoon"));
 const Community = dynamic(() => import("@/sections/Community"));
@@ -43,7 +43,7 @@ export default function Home() {
         <Hero />
         <Story />
         <Renders />
-        <Usp />
+        {/* <Usp /> */}
         <Vibe />
         <ComingSoon />
         <Community />

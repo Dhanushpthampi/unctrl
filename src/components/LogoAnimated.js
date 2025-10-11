@@ -1,14 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-
-// Paths
-const BASE_GIF = "/assets/gifs/logo-nocoin.gif";
-const BASE_WEBM = "/assets/gifs/logo-nocoin.webm";
-const OVERLAY_BIG_GIF = "/assets/gifs/logo-big.png"; // keep png
-const OVERLAY_BLACK_GIF = "/assets/gifs/logo-black.png"; // keep png
-const OVERLAY_FLIP_GIF = "/assets/gifs/logo-flip.gif";
-const OVERLAY_FLIP_WEBM = "/assets/gifs/logo-flip.webm";
+import { ASSETS } from "../const/assets";
 
 // Helper to check WebM support
 const isWebMSupported = () => {
@@ -30,7 +23,7 @@ export default function LogoAnimated({
   const resolvedBaseSize = baseSize || size || 133;
   const resolvedOverlaySize = overlaySize || resolvedBaseSize;
 
-  const [overlaySrc, setOverlaySrc] = useState(OVERLAY_BIG_GIF);
+  const [overlaySrc, setOverlaySrc] = useState(ASSETS.logoBig);
   const [useWebM, setUseWebM] = useState(false);
   const timeoutsRef = useRef([]);
   const isAnimatingRef = useRef(false);
@@ -62,13 +55,17 @@ export default function LogoAnimated({
     });
   }, [clearAllTimers]);
 
+  // Hover sequence: Big → Black → Big
   const playHoverCycle = useCallback(() => {
-    runSequence([OVERLAY_BIG_GIF, OVERLAY_BLACK_GIF, OVERLAY_BIG_GIF], [0, 160, 160]);
+    runSequence([ASSETS.logoBig, ASSETS.logoBlack, ASSETS.logoBig], [0, 160, 160]);
   }, [runSequence]);
 
+  // Click sequence: Big → Flip → Big
   const playClickCycle = useCallback(() => {
-    const frames = useWebM ? [OVERLAY_BIG_GIF, OVERLAY_FLIP_WEBM, OVERLAY_BIG_GIF] : [OVERLAY_BIG_GIF, OVERLAY_FLIP_GIF, OVERLAY_BIG_GIF];
-    const durations = useWebM ? [0, 380, 420] : [0, 380, 420];
+    const frames = useWebM
+      ? [ASSETS.logoBig, ASSETS.logoFlipWebm, ASSETS.logoBig]
+      : [ASSETS.logoBig, ASSETS.logoFlip, ASSETS.logoBig];
+    const durations = [0, 380, 420];
     runSequence(frames, durations);
   }, [runSequence, useWebM]);
 
@@ -78,7 +75,7 @@ export default function LogoAnimated({
   const handleMouseLeave = () => {
     clearAllTimers();
     isAnimatingRef.current = false;
-    setOverlaySrc(OVERLAY_BIG_GIF);
+    setOverlaySrc(ASSETS.logoBig);
   };
   const handleClick = (e) => {
     e.preventDefault();
@@ -86,6 +83,7 @@ export default function LogoAnimated({
     isAnimatingRef.current = false;
     playClickCycle();
   };
+
   useEffect(() => () => clearAllTimers(), [clearAllTimers]);
 
   const containerStyle = { width: `${resolvedBaseSize}px`, height: `${resolvedBaseSize}px` };
@@ -107,7 +105,7 @@ export default function LogoAnimated({
       {/* Base layer */}
       {useWebM ? (
         <video
-          src={BASE_WEBM}
+          src={ASSETS.logowebm}
           autoPlay
           loop
           muted
@@ -116,7 +114,7 @@ export default function LogoAnimated({
         />
       ) : (
         <img
-          src={BASE_GIF}
+          src={ASSETS.logoNoCoin}
           alt="UNCTRL base animation"
           style={{ width: "100%", height: "100%", objectFit: "contain", pointerEvents: "none" }}
         />
