@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { ASSETS } from "../const/assets";
 
 const CoinMan = () => {
   const [showGlitch, setShowGlitch] = useState(false);
@@ -11,7 +10,7 @@ const CoinMan = () => {
 
   // Preload images
   useEffect(() => {
-    const images = [ASSETS.coinMan, ASSETS.glitchMan];
+    const images = ["/images/coinman.png", "/images/glichman.png"];
     images.forEach((src) => {
       const img = new Image();
       img.src = src;
@@ -23,7 +22,7 @@ const CoinMan = () => {
     if (!intervalRef.current) {
       intervalRef.current = setInterval(() => {
         setShowGlitch((prev) => !prev);
-      }, 50); // adjust flicker speed here
+      }, 50); // adjust speed here
     }
   };
 
@@ -35,7 +34,7 @@ const CoinMan = () => {
 
   // Desktop hover behavior
   const handleMouseEnter = () => {
-    if (!("ontouchstart" in window)) {
+    if (!("ontouchstart" in window)) { // ignore mobile
       startFlicker();
     }
   };
@@ -79,19 +78,17 @@ const CoinMan = () => {
       onMouseLeave={handleMouseLeave}
       onClick={handleClick}
     >
-      {/* Default CoinMan */}
+      {/* Images */}
       <img
-        src={ASSETS.coinMan}
+        src="/images/coinman.png"
         alt="CoinMan"
-        className={`absolute top-0 left-0 w-full h-full object-contain ${
+        className={`absolute top-0 left-0 w-full h-full object-contain  ${
           showGlitch ? "opacity-0" : "opacity-100"
         }`}
         draggable={false}
       />
-
-      {/* Glitch overlay */}
       <img
-        src={ASSETS.glitchMan}
+        src="/images/glichman.png"
         alt="CoinMan Glitch"
         className={`absolute top-0 left-0 w-full h-full object-contain ${
           showGlitch ? "opacity-100" : "opacity-0"
@@ -103,3 +100,4 @@ const CoinMan = () => {
 };
 
 export default CoinMan;
+    
