@@ -12,7 +12,7 @@ export default function ControllerScene({ animateIn }) {
       dpr={[1, 1.25]}
       camera={{ position: [0, 15, 45], fov: 15 }}
       gl={{ antialias: false, alpha: false, stencil: false, powerPreference: "low-power", preserveDrawingBuffer: false }}
-      frameloop="demand"
+      frameloop="always"
       onCreated={({ gl }) => {
         gl.getContext().getExtension("WEBGL_lose_context");
       }}

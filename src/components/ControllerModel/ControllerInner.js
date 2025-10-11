@@ -1,6 +1,6 @@
 "use client";
 
-import { useThree } from "@react-three/fiber";
+import { useThree, useFrame } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
 import { useState, useEffect, useRef } from "react";
@@ -47,7 +47,12 @@ export default function ControllerInner() {
   useImagePlane({ nodes, scene, videoIndex, videoRef, planeRef, invalidate });
 
   // Button glow + click logic
-  useButtonInteraction({ button: nodes.left_buttons, gl, camera, changeVideo });
+  useButtonInteraction({ button: nodes.left_buttons, gl, camera, changeVideo, invalidate });
+
+  // Force continuous rendering for smooth animations
+  useFrame(() => {
+    // Empty - just keeps the render loop active
+  });
 
   return <primitive object={scene} />;
 }

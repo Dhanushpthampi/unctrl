@@ -1,5 +1,4 @@
 // Centralized URL and route definitions used across the app
-// Import these in nav, footer, buttons, and sections to avoid hardcoding hrefs
 
 // Base paths (helpful if you ever need to change domain/subpath)
 export const BASE_URL = '';
@@ -15,7 +14,7 @@ export const ROUTES = Object.freeze({
 	COMING_SOON: '/#coming-soon',
 });
 
-// External URLs (update as needed)
+// External URLs (updated to new Shopify subdomain)
 export const EXTERNAL = Object.freeze({
 	TWITTER: 'https://x.com/',
 	DISCORD: 'https://discord.gg/',
@@ -23,22 +22,22 @@ export const EXTERNAL = Object.freeze({
 	INSTAGRAM: 'https://instagram.com/',
 	REDDIT: 'https://reddit.com/',
 	YOUTUBE: 'https://youtube.com/',
-	PRODUCT_UNCTRL_RAGE_CONTROLLER: 'https://gameunctrl.com/products/unctrl-rage-controller?variant=50968693932352',
-	COMMUNITY_PAGE: 'https://gameunctrl.com/pages/community',
-	BLOG: 'https://gameunctrl.com/pages/blog',
-	ABOUT_US: 'https://gameunctrl.com/pages/about-us',
-	DOWNLOADS: 'https://gameunctrl.com/pages/downloads',
-	SUPPORT: 'https://gameunctrl.com/pages/support',
-	PRIVACY_POLICY: 'https://gameunctrl.com/pages/privacy-policy',
-	TERMS_AND_CONDITIONS: 'https://gameunctrl.com/pages/terms-conditions',
-	FAQS_PAGE: 'https://gameunctrl.com/pages/faqs',
-	RETURNS_AND_REFUNDS: 'https://gameunctrl.com/pages/returns-refund',
-	SHIPPING_POLICY: 'https://gameunctrl.com/pages/shipping-policy',
-	CONTACT_US: 'https://gameunctrl.com/pages/contact',
-	WARRANTY: 'https://gameunctrl.com/pages/warranty',
+	PRODUCT_UNCTRL_RAGE_CONTROLLER: 'https://shop.gameunctrl.com/products/unctrl-rage-controller?variant=50968693932352',
+	COMMUNITY_PAGE: 'https://shop.gameunctrl.com/pages/community',
+	BLOG: 'https://shop.gameunctrl.com/pages/blog',
+	ABOUT_US: 'https://shop.gameunctrl.com/pages/about-us',
+	DOWNLOADS: 'https://shop.gameunctrl.com/pages/downloads',
+	SUPPORT: 'https://shop.gameunctrl.com/pages/support',
+	PRIVACY_POLICY: 'https://shop.gameunctrl.com/pages/privacy-policy',
+	TERMS_AND_CONDITIONS: 'https://shop.gameunctrl.com/pages/terms-conditions',
+	FAQS_PAGE: 'https://shop.gameunctrl.com/pages/faqs',
+	RETURNS_AND_REFUNDS: 'https://shop.gameunctrl.com/pages/returns-refund',
+	SHIPPING_POLICY: 'https://shop.gameunctrl.com/pages/shipping-policy',
+	CONTACT_US: 'https://shop.gameunctrl.com/pages/contact',
+	WARRANTY: 'https://shop.gameunctrl.com/pages/warranty',
 });
 
-// Social links consolidated (rename or expand as needed)
+// Social links consolidated
 export const SOCIAL_LINKS = Object.freeze({
 	x: EXTERNAL.TWITTER,
 	discord: EXTERNAL.DISCORD,  
@@ -56,7 +55,7 @@ export const NAV_LINKS = Object.freeze([
 	{ label: 'Blog', href: EXTERNAL.BLOG },
 ]);
 
-// Footer links (grouped by section if needed)
+// Footer links (grouped by section)
 export const FOOTER_LINK_GROUPS = Object.freeze([
 	{
 		title: 'Column 1',
@@ -77,7 +76,7 @@ export const FOOTER_LINK_GROUPS = Object.freeze([
 	},
 ]);
 
-// Common buttons/CTAs used across the site (by semantic name)
+// Common buttons/CTAs
 export const CTA_LINKS = Object.freeze({
 	joinCommunity: EXTERNAL.COMMUNITY_PAGE,
 	followOnX: SOCIAL_LINKS.x,
@@ -87,7 +86,7 @@ export const CTA_LINKS = Object.freeze({
 	orderNow: EXTERNAL.PRODUCT_UNCTRL_RAGE_CONTROLLER,
 });
 
-// Utility: get link by key from ROUTES, EXTERNAL, SOCIAL_LINKS, or CTA_LINKS
+// Utility: get link by key
 export function getLink(key) {
 	if (!key) return '';
 	const maps = [ROUTES, EXTERNAL, SOCIAL_LINKS, CTA_LINKS];
@@ -96,10 +95,3 @@ export function getLink(key) {
 	}
 	return '';
 }
-
-// Example usage:
-// import { NAV_LINKS, CTA_LINKS, ROUTES } from '@/config/links';
-// <Link href={ROUTES.COMMUNITY}>Community</Link>
-// <UnCtrlButton href={CTA_LINKS.joinCommunity} external>Join Discord</UnCtrlButton>
-
-
