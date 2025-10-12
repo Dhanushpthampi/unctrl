@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import CoinAnimated from "../components/CoinAnimated";
 import { ASSETS } from "../const/assets";
+import MobileVideo from "../components/MobileVideo";
 
 export default function Story() {
   const [isMobile, setIsMobile] = useState(false);
@@ -24,17 +25,13 @@ export default function Story() {
     >
       {/* Background video for XL screens */}
       <div className="absolute inset-0 hidden xl:block">
-        <video
+        <MobileVideo
+          src={ASSETS.story}
           className="w-full h-full object-cover blur-2xl scale-110 opacity-70"
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="auto"
-          // poster={ASSETS.posterStoryV}
-        >
-          <source src={ASSETS.story} type="video/mp4" />
-        </video>
+          autoPlay={true}
+          loop={true}
+          muted={true}
+        />
       </div>
 
       {/* Foreground main content - Video for desktop, Image for mobile */}
@@ -47,17 +44,14 @@ export default function Story() {
             loading="eager"
           />
         ) : (
-          <video
-            className="w-full h-full md:object-cover xl:object-contain"
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="auto"
+          <MobileVideo
+            src={ASSETS.story}
             poster={ASSETS.posterStoryV}
-          >
-            <source src={ASSETS.story} type="video/mp4" />
-          </video>
+            className="w-full h-full md:object-cover xl:object-contain"
+            autoPlay={true}
+            loop={true}
+            muted={true}
+          />
         )}
       </div>
 

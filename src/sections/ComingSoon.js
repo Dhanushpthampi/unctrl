@@ -4,6 +4,7 @@ import Image from "next/image";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 import { useEffect, useState } from "react";
 import { ASSETS } from "../const/assets";
+import MobileVideo from "../components/MobileVideo";
 
 export default function ComingSoon() {
   const [isMobile, setIsMobile] = useState(false);
@@ -64,25 +65,21 @@ export default function ComingSoon() {
         </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center m-4 sm:m-10 relative">
-          <video
+          <MobileVideo
             src={ASSETS.keyboard}
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="metadata"
             className="w-[85%] sm:w-full mx-auto h-auto object-cover aspect-square shadow-[6px_6px_0px_0px_rgba(255,255,0,1)] rounded-lg"
+            autoPlay={true}
+            loop={true}
+            muted={true}
           />
 
           <div className="relative w-full h-full flex items-center justify-center">
-            <video
+            <MobileVideo
               src={ASSETS.mouse}
-              autoPlay
-              loop
-              muted
-              playsInline
-              preload="metadata"
               className="w-[85%] sm:w-full mx-auto h-auto object-cover z-20 aspect-square shadow-[6px_6px_0px_0px_rgba(138,43,226,1)] rounded-lg"
+              autoPlay={true}
+              loop={true}
+              muted={true}
             />
           </div>
 

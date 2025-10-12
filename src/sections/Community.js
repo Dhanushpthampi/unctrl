@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import UnCtrlButton from "../components/UnCtrlButton";
 import { CTA_LINKS } from "../config/links";
 import { ASSETS } from "../const/assets";
+import MobileVideo from "../components/MobileVideo";
 
 export default function Community() {
   const [isMobile, setIsMobile] = useState(false);
@@ -26,15 +27,13 @@ export default function Community() {
       className="relative min-h-[100svh] flex items-end justify-center overflow-hidden"
     >
       {/* Responsive background video with conditional source */}
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
-        preload="metadata"
-        poster="/images/community-poster.jpg"
-        className="absolute inset-0 w-full h-full object-cover"
+      <MobileVideo
         src={isMobile ? ASSETS.communityV : ASSETS.community}
+        poster="/images/community-poster.jpg"
+        className="absolute inset-0 w-full h-full"
+        autoPlay={true}
+        loop={true}
+        muted={true}
       />
 
       {/* Pixel decoration - only on desktop */}

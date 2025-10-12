@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import Image from "next/image";
 import { useRef, useEffect, useState } from "react";
 import { ASSETS } from "../const/assets";
+import MobileVideo from "../components/MobileVideo";
 
 const FAQ_ITEMS = [
   { q: "What is UNCTRL?", a: "UNCTRL is a next-gen modular gaming controller designed for precision and creativity on mobile devices." },
@@ -42,17 +43,14 @@ export default function Faqs() {
           loading="lazy"
         />
       ) : (
-        <video
+        <MobileVideo
           ref={videoRef}
           src={ASSETS.glitch}
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="metadata"
           poster={ASSETS.posterGlitch}
           className="absolute inset-0 -z-20 w-full h-full object-cover"
-          aria-hidden
+          autoPlay={true}
+          loop={true}
+          muted={true}
         />
       )}
 

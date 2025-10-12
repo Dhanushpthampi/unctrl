@@ -5,6 +5,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import CoinMan from "../components/CoinMan";
 import { ASSETS } from "../const/assets";
+import MobileVideo from "../components/MobileVideo";
 
 const allVideos = [
   ASSETS.vibe1,
@@ -29,15 +30,13 @@ function VideoCard({ src, isVisible }) {
 
   return (
     <div className="video-card">
-      <video
+      <MobileVideo
         ref={videoRef}
         src={src}
-        muted
-        loop
-        playsInline
-        preload="metadata"
         className="video-el"
-        draggable={false}
+        autoPlay={true}
+        loop={true}
+        muted={true}
       />
     </div>
   );

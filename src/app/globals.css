@@ -244,6 +244,24 @@ video {
   /* Opera specific fixes */
   -o-object-fit: cover;
   -ms-object-fit: cover;
+  /* Force autoplay and remove controls */
+  pointer-events: none;
+  /* Remove any browser controls */
+  -webkit-media-controls: none;
+  -webkit-media-controls-panel: none;
+  -webkit-media-controls-play-button: none;
+  -webkit-media-controls-timeline: none;
+  -webkit-media-controls-current-time-display: none;
+  -webkit-media-controls-time-remaining-display: none;
+  -webkit-media-controls-mute-button: none;
+  -webkit-media-controls-volume-slider: none;
+  -webkit-media-controls-fullscreen-button: none;
+  /* Force autoplay */
+  autoplay: true;
+  /* Remove focus outline */
+  outline: none;
+  /* Better mobile performance */
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* Better WebGL canvas support */
