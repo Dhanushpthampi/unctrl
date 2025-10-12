@@ -20,11 +20,16 @@ export default function RootLayout({ children, showIntroOverlay }) {
     <html lang="en" suppressHydrationWarning>
       <head>
         {/* Meta tags for better mobile compatibility */}
-        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
         <meta name="format-detection" content="telephone=no" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        {/* Opera mobile specific */}
+        <meta name="HandheldFriendly" content="true" />
+        <meta name="MobileOptimized" content="width" />
+        {/* Safari specific */}
+        <meta name="apple-touch-fullscreen" content="yes" />
         
         {/* Preload critical resources */}
         <link rel="preload" href="/images/logo.png" as="image" />

@@ -235,6 +235,15 @@ video {
   /* Force hardware acceleration */
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
+  /* Opera mobile fixes */
+  background: #000;
+  /* Ensure video is visible */
+  opacity: 1 !important;
+  /* Force video to render */
+  display: block;
+  /* Opera specific fixes */
+  -o-object-fit: cover;
+  -ms-object-fit: cover;
 }
 
 /* Better WebGL canvas support */

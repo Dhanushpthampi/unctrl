@@ -1,11 +1,11 @@
 // file: components/IntroOverlay.js
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { ASSETS } from "../const/assets";
+import MobileVideo from "./MobileVideo";
 
 export default function IntroOverlay({ onFinished }) {
-  const videoRef = useRef(null);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [videoSrc, setVideoSrc] = useState(ASSETS.intro);
@@ -28,57 +28,21 @@ export default function IntroOverlay({ onFinished }) {
     return () => window.removeEventListener("resize", updateVideoSrc);
   }, []);
 
-  // Handle video events: canplay & ended
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
+  // Handle video events
+  const handleVideoCanPlay = () => {
+    setIsVideoLoaded(true);
+  };
 
-    const handleCanPlay = () => setIsVideoLoaded(true);
-    const handleEnd = () => {
-      setIsFadingOut(true);
-      setTimeout(() => onFinished?.(), 700);
-    };
+  const handleVideoEnd = () => {
+    setIsFadingOut(true);
+    setTimeout(() => onFinished?.(), 700);
+  };
 
-    const handleError = () => {
-      // Fallback: if video fails to load, skip intro
-      console.warn("Video failed to load, skipping intro");
-      setIsFadingOut(true);
-      setTimeout(() => onFinished?.(), 700);
-    };
-
-    video.addEventListener("canplay", handleCanPlay);
-    video.addEventListener("ended", handleEnd);
-    video.addEventListener("error", handleError);
-
-    // Start video with better error handling
-    video.currentTime = 0;
-    video.load();
-    
-    // Try to play with user interaction fallback
-    const playVideo = async () => {
-      try {
-        await video.play();
-      } catch (error) {
-        console.warn("Autoplay failed, video will play on user interaction");
-        // If autoplay fails, we'll let the user interaction start it
-        setIsVideoLoaded(true);
-      }
-    };
-    
-    playVideo();
-
-    // Preload heavy 3D assets
-    // import("@/components/ControllerModel/preloadAssets")
-    //   .then((m) => m.preloadControllerAssets?.())
-    //   .catch(() => {});
-
-    return () => {
-      video.removeEventListener("canplay", handleCanPlay);
-      video.removeEventListener("ended", handleEnd);
-      video.removeEventListener("error", handleError);
-      video.pause();
-    };
-  }, [videoSrc, onFinished]);
+  const handleVideoError = () => {
+    console.warn("Intro video failed to load, skipping intro");
+    setIsFadingOut(true);
+    setTimeout(() => onFinished?.(), 700);
+  };
 
   return (
     <div
@@ -90,16 +54,29 @@ export default function IntroOverlay({ onFinished }) {
           <div className="w-12 h-12 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
         </div>
       )}
-      <video
-        ref={videoRef}
+      
+      {/* Skip button for mobile browsers */}
+      <button
+        onClick={() => {
+          setIsFadingOut(true);
+          setTimeout(() => onFinished?.(), 700);
+        }}
+        className="absolute top-4 right-4 z-10 bg-black/50 text-white px-4 py-2 rounded-lg backdrop-blur-sm border border-white/20 hover:bg-black/70 transition-colors"
+      >
+        Skip
+      </button>
+      
+      <MobileVideo
         src={videoSrc}
-        className={`w-full h-full object-cover transition-opacity duration-500 ${
+        className={`w-full h-full transition-opacity duration-500 ${
           isVideoLoaded ? "opacity-100" : "opacity-0"
         }`}
-        muted
-        playsInline
-        autoPlay
-        preload="metadata" // better for initial load
+        autoPlay={true}
+        loop={false}
+        muted={true}
+        onCanPlay={handleVideoCanPlay}
+        onEnded={handleVideoEnd}
+        onError={handleVideoError}
       />
     </div>
   );

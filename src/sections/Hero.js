@@ -1,35 +1,40 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { ASSETS } from "../const/assets";
+import MobileVideo from "@/components/MobileVideo";
 
 export default function Hero() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   return (
     <section id="home" className="relative w-full h-screen bg-black overflow-hidden">
       {/* Hero Video with poster fallback */}
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
-        preload="metadata"
+      <MobileVideo
+        src={isMobile ? ASSETS.heroV : ASSETS.hero}
         poster={ASSETS.posterHeroV}
-        className="absolute inset-0 w-full h-full object-cover"
+        className="absolute inset-0 w-full h-full"
+        autoPlay={true}
+        loop={true}
+        muted={true}
         onError={(e) => {
           console.warn("Hero video failed to load:", e);
         }}
-        onLoadStart={() => {
-          console.log("Hero video started loading");
+        onCanPlay={() => {
+          console.log("Hero video can play");
         }}
-      >
-        {/* Mobile video */}
-        <source src={ASSETS.heroV} media="(max-width: 768px)" type="video/mp4" />
-        {/* Desktop video */}
-        <source src={ASSETS.hero} media="(min-width: 769px)" type="video/mp4" />
-        {/* Fallback for browsers that don't support video */}
-        <div className="absolute inset-0 bg-black flex items-center justify-center">
-          <p className="text-white">Video not supported</p>
-        </div>
-      </video>
+      />
     </section>
   );
 }
