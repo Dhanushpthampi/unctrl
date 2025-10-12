@@ -31,7 +31,7 @@ export default function Story() {
           muted
           playsInline
           preload="auto"
-          poster={ASSETS.posterStoryV}
+          // poster={ASSETS.posterStoryV}
         >
           <source src={ASSETS.story} type="video/mp4" />
         </video>
