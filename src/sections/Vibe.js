@@ -37,12 +37,6 @@ function VideoCard({ src, isVisible }) {
         autoPlay={true}
         loop={true}
         muted={true}
-        onCanPlay={() => {
-          // Force play when video is ready
-          if (isVisible && videoRef.current) {
-            videoRef.current.play().catch(() => {});
-          }
-        }}
       />
     </div>
   );
@@ -82,41 +76,6 @@ export default function Vibe() {
   const [topIndex, setTopIndex] = useState(0);
   const [bottomIndex, setBottomIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
-
-  // Force autoplay for all videos in this section
-  useEffect(() => {
-    const forceAllVideosPlay = () => {
-      const videos = sectionRef.current?.querySelectorAll('video');
-      videos?.forEach(video => {
-        video.play().catch(() => {
-          // If autoplay fails, try again on user interaction
-          const playOnInteraction = () => {
-            video.play().catch(console.warn);
-          };
-          document.addEventListener('touchstart', playOnInteraction, { once: true });
-          document.addEventListener('click', playOnInteraction, { once: true });
-        });
-      });
-    };
-
-    // Try to play all videos when section comes into view
-    if (isInView) {
-      setTimeout(forceAllVideosPlay, 100);
-    }
-
-    // Also try on any user interaction
-    const handleUserInteraction = () => {
-      forceAllVideosPlay();
-    };
-
-    document.addEventListener('touchstart', handleUserInteraction, { once: true });
-    document.addEventListener('click', handleUserInteraction, { once: true });
-
-    return () => {
-      document.removeEventListener('touchstart', handleUserInteraction);
-      document.removeEventListener('click', handleUserInteraction);
-    };
-  }, [isInView]);
 
   const stepSlides = 1;
   const slideDurationMs = 300;
@@ -237,17 +196,6 @@ export default function Vibe() {
           will-change: transform;
           transform: translateZ(0);
           backface-visibility: hidden;
-          /* Remove any mobile video controls */
-          pointer-events: none;
-          -webkit-media-controls: none;
-          -webkit-media-controls-panel: none;
-          -webkit-media-controls-play-button: none;
-          -webkit-media-controls-timeline: none;
-          -webkit-media-controls-current-time-display: none;
-          -webkit-media-controls-time-remaining-display: none;
-          -webkit-media-controls-mute-button: none;
-          -webkit-media-controls-volume-slider: none;
-          -webkit-media-controls-fullscreen-button: none;
         }
         .bottom-row-offset {
           transform: translateX(-112px);

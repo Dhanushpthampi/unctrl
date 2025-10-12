@@ -247,27 +247,21 @@ video {
   /* Force autoplay and remove controls */
   pointer-events: none;
   /* Remove any browser controls */
-  -webkit-media-controls: none !important;
-  -webkit-media-controls-panel: none !important;
-  -webkit-media-controls-play-button: none !important;
-  -webkit-media-controls-timeline: none !important;
-  -webkit-media-controls-current-time-display: none !important;
-  -webkit-media-controls-time-remaining-display: none !important;
-  -webkit-media-controls-mute-button: none !important;
-  -webkit-media-controls-volume-slider: none !important;
-  -webkit-media-controls-fullscreen-button: none !important;
+  -webkit-media-controls: none;
+  -webkit-media-controls-panel: none;
+  -webkit-media-controls-play-button: none;
+  -webkit-media-controls-timeline: none;
+  -webkit-media-controls-current-time-display: none;
+  -webkit-media-controls-time-remaining-display: none;
+  -webkit-media-controls-mute-button: none;
+  -webkit-media-controls-volume-slider: none;
+  -webkit-media-controls-fullscreen-button: none;
   /* Force autoplay */
   autoplay: true;
   /* Remove focus outline */
   outline: none;
   /* Better mobile performance */
   -webkit-tap-highlight-color: transparent;
-  /* iOS Safari specific */
-  -webkit-playsinline: true;
-  /* Android browsers */
-  x5-playsinline: true;
-  x5-video-player-type: h5;
-  x5-video-player-fullscreen: true;
 }
 
 /* Better WebGL canvas support */
