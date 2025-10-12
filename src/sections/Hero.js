@@ -12,7 +12,7 @@ export default function Hero() {
         muted
         playsInline
         preload="metadata"
-        poster={ASSETS.posterHeroV}
+        // poster={ASSETS.posterHeroV}
         className="absolute inset-0 w-full h-full object-cover"
       >
         {/* Mobile video */}
