@@ -26,6 +26,12 @@ const MobileVideo = forwardRef(function MobileVideo({
     video.controls = false;
     video.controlsList = 'nodownload nofullscreen noremoteplayback';
     video.disablePictureInPicture = true;
+    
+    // Additional mobile-specific attributes
+    video.setAttribute('webkit-playsinline', 'true');
+    video.setAttribute('x5-playsinline', 'true');
+    video.setAttribute('x5-video-player-type', 'h5');
+    video.setAttribute('x5-video-player-fullscreen', 'true');
 
     // Force autoplay with multiple strategies
     const forceAutoplay = async () => {
@@ -55,6 +61,7 @@ const MobileVideo = forwardRef(function MobileVideo({
           document.addEventListener("touchstart", playOnInteraction, { once: true });
           document.addEventListener("click", playOnInteraction, { once: true });
           document.addEventListener("scroll", playOnInteraction, { once: true });
+          document.addEventListener("touchend", playOnInteraction, { once: true });
           
           // Auto-play after a short delay (some browsers allow this)
           setTimeout(() => {
@@ -62,6 +69,14 @@ const MobileVideo = forwardRef(function MobileVideo({
               setIsPlaying(true);
             }).catch(console.warn);
           }, 100);
+          
+          // Additional iOS Safari specific attempts
+          setTimeout(() => {
+            video.currentTime = 0;
+            video.play().then(() => {
+              setIsPlaying(true);
+            }).catch(console.warn);
+          }, 500);
         }
       }
     };
