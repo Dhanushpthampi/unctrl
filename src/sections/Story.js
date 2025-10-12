@@ -31,27 +31,34 @@ export default function Story() {
           muted
           playsInline
           preload="auto"
+          poster={ASSETS.posterStoryV}
         >
           <source src={ASSETS.story} type="video/mp4" />
         </video>
       </div>
 
-      {/* Foreground main video */}
+      {/* Foreground main content - Video for desktop, Image for mobile */}
       <div className="absolute inset-0 flex items-center justify-center w-full h-full z-10">
-        <video
-          key={isMobile ? "mobile" : "desktop"}
-          className="w-full h-full md:object-cover xl:object-contain"
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="auto"
-        >
-          <source
-            src={isMobile ? ASSETS.storyV : ASSETS.story}
-            type="video/mp4"
+        {isMobile ? (
+          <img
+            src={ASSETS.posterStoryV}
+            alt="Story"
+            className="w-full h-full object-contain"
+            loading="eager"
           />
-        </video>
+        ) : (
+          <video
+            className="w-full h-full md:object-cover xl:object-contain"
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            poster={ASSETS.posterStoryV}
+          >
+            <source src={ASSETS.story} type="video/mp4" />
+          </video>
+        )}
       </div>
 
       {/* Coin - Mobile only */}

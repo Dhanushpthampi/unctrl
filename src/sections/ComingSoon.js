@@ -2,10 +2,12 @@
 
 import Image from "next/image";
 import { motion, useMotionValue, useSpring } from "framer-motion";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ASSETS } from "../const/assets";
 
 export default function ComingSoon() {
+  const [isMobile, setIsMobile] = useState(false);
+  
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const rotation = useMotionValue(0);
@@ -14,7 +16,21 @@ export default function ComingSoon() {
   const springY = useSpring(y, { stiffness: 120, damping: 20 });
   const springRotation = useSpring(rotation, { stiffness: 120, damping: 20 });
 
+  // Detect mobile on mount and resize
   useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Only run intersection observer on desktop
+  useEffect(() => {
+    if (isMobile) return;
+    
     const community = document.querySelector("#community");
     if (!community) return;
 
@@ -34,7 +50,7 @@ export default function ComingSoon() {
 
     observer.observe(community);
     return () => observer.disconnect();
-  }, [x, y, rotation]);
+  }, [isMobile, x, y, rotation]);
 
   return (
     <section
@@ -70,12 +86,22 @@ export default function ComingSoon() {
             />
           </div>
 
-          <motion.div
-            className="absolute top-1/2 z-10"
-            style={{ x: springX, y: springY, rotate: springRotation, left: "60%" }}
-          >
-            <Image src="/images/violetPixel.png" width={150} height={150} alt="violet pixel" />
-          </motion.div>
+          {/* Only render pixel animation on desktop */}
+          {!isMobile && (
+            <motion.div
+              className="absolute top-1/2 z-10"
+              style={{ x: springX, y: springY, rotate: springRotation, left: "60%" }}
+            >
+              <Image 
+                src="/images/violetPixel.png" 
+                width={150} 
+                height={150} 
+                alt="violet pixel"
+                priority={false}
+                loading="lazy"
+              />
+            </motion.div>
+          )}
         </div>
       </div>
     </section>

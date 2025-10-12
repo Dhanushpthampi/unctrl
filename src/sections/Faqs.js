@@ -1,8 +1,8 @@
 "use client";
 
 import Footer from "@/components/Footer";
-import { useRef } from "react";
-import { useState } from "react";
+import Image from "next/image";
+import { useRef, useEffect, useState } from "react";
 import { ASSETS } from "../const/assets";
 
 const FAQ_ITEMS = [
@@ -18,21 +18,43 @@ const FAQ_ITEMS = [
 
 export default function Faqs() {
   const videoRef = useRef(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile on mount and resize
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   return (
     <section id="faqs" className="relative bg-transparent text-white overflow-hidden">
-      {/* Video background */}
-      <video
-        ref={videoRef}
-        src={ASSETS.glitch}
-        autoPlay
-        loop
-        muted
-        playsInline
-        preload="metadata"
-        className="absolute inset-0 -z-20 w-full h-full object-cover"
-        aria-hidden
-      />
+      {/* Conditional background - Image for mobile, Video for desktop */}
+      {isMobile ? (
+        <img
+          src={ASSETS.posterGlitch}
+          alt="Background"
+          className="absolute inset-0 -z-20 w-full h-full object-cover"
+          loading="lazy"
+        />
+      ) : (
+        <video
+          ref={videoRef}
+          src={ASSETS.glitch}
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="metadata"
+          poster={ASSETS.posterGlitch}
+          className="absolute inset-0 -z-20 w-full h-full object-cover"
+          aria-hidden
+        />
+      )}
 
       {/* FAQ Content */}
       <div className="relative z-10 max-w-3xl mx-auto container-px py-12 sm:py-16 md:pt-24 lg:pt-28">

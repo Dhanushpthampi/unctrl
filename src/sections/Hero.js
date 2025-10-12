@@ -5,14 +5,14 @@ import { ASSETS } from "../const/assets";
 export default function Hero() {
   return (
     <section id="home" className="relative w-full h-screen bg-black overflow-hidden">
-      {/* Hero Video with responsive sources */}
+      {/* Hero Video with poster fallback */}
       <video
         autoPlay
         loop
         muted
         playsInline
         preload="metadata"
-        poster="/assets/images/hero-poster.jpg" // lightweight fallback image
+        poster={ASSETS.posterHeroV}
         className="absolute inset-0 w-full h-full object-cover"
       >
         {/* Mobile video */}

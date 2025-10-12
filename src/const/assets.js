@@ -23,4 +23,11 @@ export const ASSETS = {
   communityV:"https://cdn.shopify.com/videos/c/o/v/f6015076a6104905aedf49e5369980b2.mp4",
   glitch:"https://cdn.shopify.com/videos/c/o/v/14576782413d46718af3842789c39be4.mp4",
 
+
+
+
+  //poster-images--------------------------------
+  posterStoryV:"https://cdn.shopify.com/s/files/1/0951/2842/0672/files/poster_storyv.png?v=1760243252",
+  posterGlitch:"https://cdn.shopify.com/s/files/1/0951/2842/0672/files/poster_glich.png?v=1760243248",
+  posterHeroV:"https://cdn.shopify.com/s/files/1/0951/2842/0672/files/poster_herov.png?v=1760243245",
 };
