@@ -11,10 +11,28 @@ export default function ControllerScene({ animateIn }) {
       className="w-full h-[90vh] r3f-canvas"
       dpr={[1, 1.25]}
       camera={{ position: [0, 15, 45], fov: 15 }}
-      gl={{ antialias: false, alpha: false, stencil: false, powerPreference: "low-power", preserveDrawingBuffer: false }}
+      gl={{ 
+        antialias: false, 
+        alpha: false, 
+        stencil: false, 
+        powerPreference: "low-power", 
+        preserveDrawingBuffer: false,
+        failIfMajorPerformanceCaveat: false
+      }}
       frameloop="always"
       onCreated={({ gl }) => {
-        gl.getContext().getExtension("WEBGL_lose_context");
+        try {
+          // Safely get WebGL extension
+          const context = gl.getContext();
+          if (context && context.getExtension) {
+            context.getExtension("WEBGL_lose_context");
+          }
+        } catch (error) {
+          console.warn("WebGL extension not available:", error);
+        }
+      }}
+      onError={(error) => {
+        console.warn("WebGL context creation failed:", error);
       }}
     >
       <Suspense fallback={null}>

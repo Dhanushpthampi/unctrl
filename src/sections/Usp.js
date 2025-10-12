@@ -46,9 +46,12 @@ export default function Usp() {
       // Pre-warm the scene module as well
       import("@/components/ControllerModel/ControllerScene").catch(() => {});
     };
+    
+    // Use requestIdleCallback if available, otherwise use setTimeout
     if ("requestIdleCallback" in window) {
       requestIdleCallback(run, { timeout: 1000 });
     } else {
+      // Fallback for Safari and other browsers without requestIdleCallback
       setTimeout(run, 500);
     }
   }, []);

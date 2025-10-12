@@ -39,13 +39,33 @@ export default function IntroOverlay({ onFinished }) {
       setTimeout(() => onFinished?.(), 700);
     };
 
+    const handleError = () => {
+      // Fallback: if video fails to load, skip intro
+      console.warn("Video failed to load, skipping intro");
+      setIsFadingOut(true);
+      setTimeout(() => onFinished?.(), 700);
+    };
+
     video.addEventListener("canplay", handleCanPlay);
     video.addEventListener("ended", handleEnd);
+    video.addEventListener("error", handleError);
 
-    // Start video
+    // Start video with better error handling
     video.currentTime = 0;
     video.load();
-    video.play().catch(() => {});
+    
+    // Try to play with user interaction fallback
+    const playVideo = async () => {
+      try {
+        await video.play();
+      } catch (error) {
+        console.warn("Autoplay failed, video will play on user interaction");
+        // If autoplay fails, we'll let the user interaction start it
+        setIsVideoLoaded(true);
+      }
+    };
+    
+    playVideo();
 
     // Preload heavy 3D assets
     // import("@/components/ControllerModel/preloadAssets")
@@ -55,6 +75,7 @@ export default function IntroOverlay({ onFinished }) {
     return () => {
       video.removeEventListener("canplay", handleCanPlay);
       video.removeEventListener("ended", handleEnd);
+      video.removeEventListener("error", handleError);
       video.pause();
     };
   }, [videoSrc, onFinished]);

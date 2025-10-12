@@ -73,9 +73,14 @@ html,
 body {
 	height: 100%;
 	overflow: hidden;
+	/* Better mobile browser support */
+	-webkit-overflow-scrolling: touch;
+	-webkit-tap-highlight-color: transparent;
 }
 main {
   height: 100dvh;
+  /* Fallback for browsers that don't support dvh */
+  height: 100vh;
   overflow-y: auto; /* allow vertical scroll */
   scroll-snap-type: y mandatory;
 
@@ -84,6 +89,9 @@ main {
 
   /* Hide scrollbar in IE/Edge */
   -ms-overflow-style: none;
+  
+  /* Better mobile browser support */
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Hide scrollbar in Chrome, Safari, Edge */
@@ -216,4 +224,26 @@ button:hover,
 .boaring-hover,
 .boaring-hover * {
   cursor: url('/images/cursor_boring.png'), pointer !important;
+}
+
+/* Video compatibility improvements */
+video {
+  object-fit: cover;
+  /* Better mobile video support */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  /* Force hardware acceleration */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* Better WebGL canvas support */
+.r3f-canvas {
+  /* Force hardware acceleration */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  /* Better touch support */
+  touch-action: manipulation;
 }

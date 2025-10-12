@@ -10,22 +10,38 @@ import useButtonInteraction from "./useButtonInteraction";
 // Lazy preload GLB
 if (typeof window !== "undefined") {
   useGLTF.preload("/models/c3d.glb");
-  requestIdleCallback?.(() => {
+  
+  const preloadImages = () => {
     ["/assets/usps/1.png", "/assets/usps/2.png"].forEach((src) => {
       const img = new Image();
       img.decoding = "async";
       img.loading = "eager";
       img.src = src;
     });
-  });
+  };
+  
+  // Use requestIdleCallback if available, otherwise use setTimeout
+  if ("requestIdleCallback" in window) {
+    requestIdleCallback(preloadImages);
+  } else {
+    // Fallback for Safari and other browsers without requestIdleCallback
+    setTimeout(preloadImages, 100);
+  }
 }
 
 export default function ControllerInner() {
-  // Setup Draco loader
+  // Setup Draco loader with error handling
   const dracoLoader = new DRACOLoader();
-  // Use Google's CDN for Draco decoders to avoid waiting for local assets
-  dracoLoader.setDecoderPath("https://www.gstatic.com/draco/v1/decoders/");
-  dracoLoader.setDecoderConfig({ type: "wasm" });
+  
+  // Try to use Google's CDN for Draco decoders, fallback to local if needed
+  try {
+    dracoLoader.setDecoderPath("https://www.gstatic.com/draco/v1/decoders/");
+    dracoLoader.setDecoderConfig({ type: "wasm" });
+  } catch (error) {
+    console.warn("Failed to setup Draco loader with CDN, using fallback:", error);
+    // Fallback to local decoder path
+    dracoLoader.setDecoderPath("/draco/");
+  }
 
   const { scene, nodes } = useGLTF("/models/c3d.glb", true, undefined, dracoLoader);
   const { gl, camera, invalidate } = useThree();

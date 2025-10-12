@@ -19,8 +19,8 @@ export async function preloadControllerAssets() {
     }
 
     // Preload first USPS images during idle time
-    if (typeof window !== "undefined" && "requestIdleCallback" in window) {
-      requestIdleCallback(() => {
+    if (typeof window !== "undefined") {
+      const preloadImages = () => {
         const paths = [
           "/assets/usps/1.png",
           "/assets/usps/2.png", 
@@ -31,7 +31,15 @@ export async function preloadControllerAssets() {
           img.loading = "eager";
           img.src = src;
         });
-      });
+      };
+      
+      // Use requestIdleCallback if available, otherwise use setTimeout
+      if ("requestIdleCallback" in window) {
+        requestIdleCallback(preloadImages);
+      } else {
+        // Fallback for Safari and other browsers without requestIdleCallback
+        setTimeout(preloadImages, 100);
+      }
     }
   } catch (e) {
     console.warn("Controller preloader failed", e);

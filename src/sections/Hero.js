@@ -12,13 +12,23 @@ export default function Hero() {
         muted
         playsInline
         preload="metadata"
-        // poster={ASSETS.posterHeroV}
+        poster={ASSETS.posterHeroV}
         className="absolute inset-0 w-full h-full object-cover"
+        onError={(e) => {
+          console.warn("Hero video failed to load:", e);
+        }}
+        onLoadStart={() => {
+          console.log("Hero video started loading");
+        }}
       >
         {/* Mobile video */}
         <source src={ASSETS.heroV} media="(max-width: 768px)" type="video/mp4" />
         {/* Desktop video */}
         <source src={ASSETS.hero} media="(min-width: 769px)" type="video/mp4" />
+        {/* Fallback for browsers that don't support video */}
+        <div className="absolute inset-0 bg-black flex items-center justify-center">
+          <p className="text-white">Video not supported</p>
+        </div>
       </video>
     </section>
   );

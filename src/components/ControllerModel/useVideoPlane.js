@@ -17,7 +17,9 @@ const tryLoadInOrder = (paths, onSuccess, onFail) => {
       return;
     }
     const path = paths[i++];
-    if (typeof createImageBitmap !== "undefined") {
+    
+    // Check for ImageBitmap support (not available in Safari)
+    if (typeof createImageBitmap !== "undefined" && typeof ImageBitmap !== "undefined") {
       bitmapLoader.load(
         path,
         (imageBitmap) => onSuccess(new THREE.CanvasTexture(imageBitmap)),
@@ -25,6 +27,7 @@ const tryLoadInOrder = (paths, onSuccess, onFail) => {
         () => loader.load(path, onSuccess, undefined, attempt)
       );
     } else {
+      // Fallback to regular texture loader for Safari and other browsers
       loader.load(path, onSuccess, undefined, attempt);
     }
   };
