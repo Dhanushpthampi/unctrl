@@ -26,7 +26,7 @@ export default function Story() {
       {/* Background video for XL screens (optional) */}
       {!isMobile && (
         <div className="absolute inset-0 xl:block">
-          <MobileVideo
+          <video
             src={ASSETS.story}
             className="w-full h-full object-cover blur-2xl scale-110 opacity-70"
             autoPlay
@@ -38,7 +38,7 @@ export default function Story() {
 
       {/* Main content */}
       <div className="absolute inset-0 flex items-center justify-center w-full h-full z-10">
-        <MobileVideo
+        <video
           src={videoSrc}
           className="max-w-[100vw] w-auto h-auto md:max-h-[100vh] md:h-[100vh]"
           autoPlay
