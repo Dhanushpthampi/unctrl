@@ -8,7 +8,8 @@ export default function SiteHeader({ children }) {
   const [show, setShow] = useState(false);
 
   const desktopNavHeight = 80; // px
-  const mobileNavHeight = 64; // px
+  const mobileNavTopHeight = 70; // px (matches your top navbar)
+  const mobileNavBottomHeight = 75; // px (matches your bottom navbar)
 
   useEffect(() => {
     const intro = document.querySelector("#intro");
@@ -39,17 +40,12 @@ export default function SiteHeader({ children }) {
         style={{ height: `${desktopNavHeight}px` }}
       >
         <DesktopNav height={desktopNavHeight} />
-
       </div>
 
-      {/* Mobile Navbar */}
-      <div
-        className={`mobile-navbar fixed bottom-0 left-0 w-full z-[70] transition-transform duration-300 md:hidden ${
-          show ? "translate-y-0" : "translate-y-full"
-        }`}
-        style={{ height: `${mobileNavHeight}px` }}
-      >
-        <MobileNav />
+      {/* Mobile Navbars - Both Top and Bottom */}
+      <div className="md:hidden">
+        {/* Pass the show state as a prop to MobileNav */}
+        <MobileNav show={show} />
       </div>
 
       {/* Content wrapper */}

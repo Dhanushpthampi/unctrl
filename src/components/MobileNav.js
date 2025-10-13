@@ -1,138 +1,132 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { motion } from "framer-motion";
+import { useState } from "react";
 import Link from "next/link";
 import { AnimatedLink } from "./AnimatedLink";
 import LogoAnimated from "./LogoAnimated";
+import { Home, Package, Users, MessageCircle, BookOpen } from "lucide-react";
 import { NAV_LINKS } from "@/config/links";
+import UnCtrlButton from "./UnCtrlButton";
+import { CTA_LINKS } from "@/config/links";
+// Import your UnctrlButton component
+// import UnctrlButton from "./UnctrlButton";
 
-export default function MobileNav() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const overlayRef = useRef(null);
 
-  // Handle clicks outside the overlay and navbar
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (menuOpen && overlayRef.current && !overlayRef.current.contains(event.target)) {
-        const navbar = document.querySelector('.fixed.bottom-0.left-0.w-full.z-\\[70\\]');
-        if (navbar && !navbar.contains(event.target)) {
-          setMenuOpen(false);
-        }
-      }
-    };
 
-    if (menuOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-      document.addEventListener('touchstart', handleClickOutside);
-    }
+// Map navigation items with icons
+const NAV_ITEMS = [
+  { ...NAV_LINKS[0], icon: Home }, // Home
+  { ...NAV_LINKS[1], icon: Package }, // Products
+  { ...NAV_LINKS[2], icon: Users }, // About Us
+  { ...NAV_LINKS[3], icon: MessageCircle }, // Community
+  { ...NAV_LINKS[4], icon: BookOpen }, // Blog
+];
 
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('touchstart', handleClickOutside);
-    };
-  }, [menuOpen]);
-
-  const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
-  };
+export default function MobileNav({ show = true }) {
+  const [activeTab, setActiveTab] = useState(NAV_LINKS[0].href);
 
   return (
     <div className="md:hidden">
-      {/* Bottom bar with border */}
-      <div className="fixed bottom-0 left-0 w-full z-[70] h-[80px]">
+      {/* Top Navbar */}
+      <div 
+        className={`fixed top-0 left-0 w-full z-[70] h-[85px] transition-transform duration-300 ${
+          show ? "translate-y-0" : "-translate-y-full"
+        }`}
+      >
         <div className="relative h-full">
           {/* Main black background */}
-          <div
-            className="absolute inset-0 bg-black"
-            style={{
-              clipPath: `polygon(
-                0 0, calc(100% - 8px) 0, calc(100% - 8px) 5%, calc(100% - 4px) 5%, calc(100% - 4px) 10%,
-                100% 10%, 100% 100%,
-                0 100%, 0 10%, 4px 10%, 4px 5%, 8px 5%, 8px 0
-              )`,
-            }}
-          />
+          <div className="absolute inset-0 bg-black" />
 
           {/* Content row */}
-          <div className="relative h-full flex items-center justify-between px-6">
-            {/* Hamburger */}
-            <button onClick={toggleMenu} className="relative p-2 bg-transparent boaring-hover">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6 text-orange-500 relative z-10"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path strokeWidth={1} d="M4 6h16" />
-                <path strokeWidth={2} d="M4 12h16" />
-                <path strokeWidth={1} d="M4 18h16" />
-              </svg>
-            </button>
-
-            {/* Logo */}
-            <div className="flex-1 flex justify-center">
-              <LogoAnimated baseSize={140} overlaySize={40} overlayOffsetX={-45} overlayOffsetY={0} />
+          <div className="relative h-full flex items-center justify-between px-4">
+            {/* Logo on the left */}
+            <div className="flex items-center">
+              <Link href={NAV_LINKS[0].href}>
+                <LogoAnimated 
+                  baseSize={120} 
+                  overlaySize={35} 
+                  overlayOffsetX={-40} 
+                  overlayOffsetY={0} 
+                />
+              </Link>
             </div>
 
-            {/* Spacer */}
-            <div className="w-10" />
+            {/* UnctrlButton on the right */}
+            <div className="flex items-center">
+            <UnCtrlButton href={CTA_LINKS.orderNow} external>ORDER NOW</UnCtrlButton> 
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Overlay Menu */}
-      <motion.div
-        ref={overlayRef}
-        className="fixed bottom-0 left-0 w-full z-[60] flex flex-col items-center justify-center text-white overflow-hidden"
-        animate={{ height: menuOpen ? "60vh" : "82px" }}
-        transition={{ duration: 0.4, ease: "easeInOut" }}
+      {/* Bottom Navigation Bar */}
+      <div 
+        className={`fixed bottom-0 left-0 w-full z-[70] h-[75px] transition-transform duration-300 ${
+          show ? "translate-y-0" : "translate-y-full"
+        }`}
       >
-        {/* Background */}
-        <div
-          className="absolute inset-0 bg-gradient-to-b from-[#FF4500] to-[#FF6B35]"
-          style={{
-            clipPath: `polygon(
-              0 0, calc(100% - 4px) 0, calc(100% - 4px) 4px,
-              100% 4px, 100% 100%,
-              0 100%, 0 4px, 4px 4px, 4px 0
-            )`,
-          }}
-        />
+        <div className="relative h-full">
+          {/* Main background with gradient */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#1a1a1a] to-black" />
 
-        {/* Menu Links */}
-        <nav className="flex flex-col items-center gap-6 text-xl tracking-widest relative z-10 font-mono mb-10">
-          {NAV_LINKS.map((item, index) => (
-            <motion.div
-              key={item.href}
-              initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
-              animate={{ opacity: menuOpen ? 1 : 0, y: menuOpen ? 0 : 30, filter: menuOpen ? "blur(0px)" : "blur(10px)" }}
-              transition={{ delay: 0.1 + index * 0.1, duration: 0.6, ease: "easeOut" }}
-            >
-              {item.external ? (
+          {/* Navigation Items */}
+          <nav className="relative h-full flex items-center justify-around px-2">
+            {NAV_ITEMS.map((item) => {
+              const Icon = item.icon;
+              const isActive = activeTab === item.href;
+              
+              // Check if link is external (starts with http)
+              const isExternal = item.href.startsWith('http');
+              
+              const linkContent = (
+                <>
+                  {/* Icon */}
+                  <div
+                    className={`transition-all duration-300 ${
+                      isActive 
+                        ? "text-orange-500 scale-110" 
+                        : "text-gray-400 group-hover:text-orange-400 group-hover:scale-105"
+                    }`}
+                  >
+                    <Icon size={24} strokeWidth={1.5} />
+                  </div>
+                  
+                  {/* Label with AnimatedLink */}
+                  <div
+                    className={`text-[9px] font-mono tracking-wider transition-colors duration-300 ${
+                      isActive 
+                        ? "text-orange-500" 
+                        : "text-gray-400 group-hover:text-orange-400"
+                    }`}
+                  >
+                    <AnimatedLink value={item.label.toUpperCase()} />
+                  </div>
+                </>
+              );
+
+              return isExternal ? (
                 <a
+                  key={item.href}
                   href={item.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => setMenuOpen(false)}
-                  className="hover:text-black transition-colors duration-300"
+                  onClick={() => setActiveTab(item.href)}
+                  className="flex flex-col items-center justify-center gap-1 min-w-[60px] group"
                 >
-                  <AnimatedLink value={item.label.toUpperCase()} />
+                  {linkContent}
                 </a>
               ) : (
                 <Link
+                  key={item.href}
                   href={item.href}
-                  onClick={() => setMenuOpen(false)}
-                  className="hover:text-black transition-colors duration-300"
+                  onClick={() => setActiveTab(item.href)}
+                  className="flex flex-col items-center justify-center gap-1 min-w-[60px] group"
                 >
-                  <AnimatedLink value={item.label.toUpperCase()} />
+                  {linkContent}
                 </Link>
-              )}
-            </motion.div>
-          ))}
-        </nav>
-      </motion.div>
+              );
+            })}
+          </nav>
+        </div>
+      </div>
     </div>
   );
 }
