@@ -55,7 +55,7 @@ export default function RootLayout({ children, showIntroOverlay }) {
           <SiteHeader />
           {children}
           <ScrollDownIndicator />
-          <Anlytics />
+          <Analytics />
            <SpeedInsights />
         </ScrollEffects>
       </body>
