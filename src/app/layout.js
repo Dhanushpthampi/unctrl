@@ -4,6 +4,7 @@ import ScrollEffects from "@/components/ScrollEffects";
 import ScrollDownIndicator from "@/components/ScrollDownIndicator";
 import SiteHeader from "@/components/SiteHeader";
 import { Analytics } from "@vercel/analytics/next"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 const chakra = Chakra_Petch({
   weight: ["400", "700"],
   subsets: ["latin"],
@@ -54,7 +55,8 @@ export default function RootLayout({ children, showIntroOverlay }) {
           <SiteHeader />
           {children}
           <ScrollDownIndicator />
-          <Analytics />
+          <Anlytics />
+           <SpeedInsights />
         </ScrollEffects>
       </body>
     </html>
