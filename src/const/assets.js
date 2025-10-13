@@ -1,12 +1,12 @@
 
 // src/constants/assets.js
 export const ASSETS = {
-  intro: "https://cdn.shopify.com/videos/c/o/v/958ff6cd660f4790b5be101c3b61394c.mp4",
+  intro: "https://cdn.shopify.com/videos/c/o/v/59251dd237104b0c86abf6ec2fab005c.mp4",
   introV: "https://cdn.shopify.com/videos/c/o/v/9950d122aad54ce196b7fed3c996527f.mp4",
   hero:"https://cdn.shopify.com/videos/c/o/v/07063219ec684d4c9a5f8f030a6c95c1.mp4",
   heroV:"https://cdn.shopify.com/videos/c/o/v/a0a363d84f194a95bfa4233834874d6e.mp4",
   story:"https://cdn.shopify.com/videos/c/o/v/fa108b8430bb480aba8634eab29f56b2.mp4",
-  storyV:"https://cdn.shopify.com/videos/c/o/v/349ff334c9ff4c8d974eb3f704fb3e69.mp4",
+  storyV:"https://cdn.shopify.com/videos/c/o/v/fdb9bc44f6ec48ccb96a3155090d17ca.mp4",
   render:"https://cdn.shopify.com/videos/c/o/v/a0f0b6f563f54c90be61b156c0fc11bf.mp4",
   renderV:"https://cdn.shopify.com/videos/c/o/v/4c8912e8db3b4030a1d30cda7de6ea44.mp4",
   vibe1:"https://cdn.shopify.com/videos/c/o/v/f39262935e384b3b92e54310a159ba00.mp4",
