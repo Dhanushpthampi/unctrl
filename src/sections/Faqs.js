@@ -6,16 +6,50 @@ import { useRef, useEffect, useState } from "react";
 import { ASSETS } from "../const/assets";
 import MobileVideo from "../components/MobileVideo";
 
+
 const FAQ_ITEMS = [
-  { q: "What is UNCTRL?", a: "UNCTRL is a next-gen modular gaming controller designed for precision and creativity on mobile devices." },
-  { q: "When can I pre-order?", a: "Pre-orders open soon. Join the community to be notified the second it goes live." },
-  { q: "Which platforms are supported?", a: "We are focused on mobile gaming at launch, with broader platform support under exploration." },
-  { q: "Is there software?", a: "Yes. Our companion app lets you map inputs, save profiles, and share setups with the community." },
-  { q: "Can I customize buttons?", a: "Absolutely! UNCTRL modules can be swapped and mapped to suit your gameplay style." },
-  { q: "Does it support Bluetooth?", a: "Yes, it connects seamlessly over Bluetooth with low latency for mobile devices." },
-  { q: "Battery life?", a: "UNCTRL delivers up to 20 hours of continuous play on a single charge." },
-  { q: "Is it compatible with games?", a: "It works with most mobile games that support controllers, plus the companion app lets you configure any game." },
+  {
+    q: "What makes the UNCTRL Controller so much better than Bluetooth?",
+    a: "Simple. We ditch Bluetooth's unreliable lag. Our Type-C wired connection delivers zero-latency precision. Every flick, dodge, and combo registers instantly. Bluetooth is for amateurs.",
+  },
+  {
+    q: "Will this controller work with my phone?",
+    a: "If your phone is between 110mm and 185mm long and has a USB Type-C connection, it fits. Our reinforced telescopic grip is built to stretch and secure everything from compact smartphones to 7-inch gaming beasts. No wobbles. No broken clamps.",
+  },
+  {
+    q: "Do I need a special app to use it?",
+    a: "Our UNCTRL Companion App is your secret weapon. It instantly detects over 500 controller-ready games on your phone. No more guessing. Just launch and play. More games, less searching.",
+  },
+  {
+    q: "What about stick drift? I'm sick of it.",
+    a: "So are we. That's why we use Hall Effect Triggers & Joysticks. Magnetic sensors mean no physical wear, no drift, ever. Just ultra-precise control that stays accurate for millions of presses. Designed to last, built to dominate.",
+  },
+  {
+    q: "Can I use this controller for PC or console streaming?",
+    a: "Absolutely. Stream your Steam library, PlayStation, or gaming PC directly to your phone with low latency. It supports PS Mode for Remote Play and X-Input for PC. Carry your AAA titles anywhere.",
+  },
+  {
+    q: "Is it compatible with both Android and iPhone?",
+    a: "Yes. It features Multi-Platform Compatibility for Android and iOS. One controller, all your mobile devices, seamless.",
+  },
+  {
+    q: "What are these 'Special Features' like Turbo and Macros?",
+    a: "Pro-level advantage, unlocked. Turbo Mode gives you rapid-fire in shooters. Rapid Trigger delivers lightning-fast input response. Macros let you assign complex combos to a single button. Game smarter, react faster, dominate easier.",
+  },
+  {
+    q: "Can I customize the look of the controller?",
+    a: "Your vibe, your rules. The controller features Vibrant LED Backlights that you can customize with different colors and effects. Match your setup, match your mood, make it truly UNCTRL.",
+  },
+  {
+    q: "Does it drain my phone battery? Can I charge while playing?",
+    a: "Our Pass-Through Charging lets you power your phone through the controller. Game on indefinitely without running out of juice. Keep your phone charged, keep the domination going.",
+  },
+  {
+    q: "What's the warranty on this thing?",
+    a: "We build gear that doesn't suck. Your UNCTRL Controller comes with a 12 Month Limited Warranty against manufacturing defects. If it's our fault, we fix it. Period. Check our full warranty terms for details.",
+  },
 ];
+
 
 export default function Faqs() {
   const videoRef = useRef(null);
