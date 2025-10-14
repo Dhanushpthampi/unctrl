@@ -1,223 +1,276 @@
-/* =========================
-   🌐 Tailwind + Global Theme
-========================= */
 @import "tailwindcss";
 
 :root {
-  --background: #1f1f21;
-  --foreground: #fcfcfc;
-  --brand-orange: #ff5900;
-  --brand-black: #1f1f21;
-  --brand-yellow: #fcde05;
-  --brand-lime: #c2f412;
-  --brand-purple: #9b5de5;
+	--background: #1f1f21;
+	--foreground: #fcfcfc;
+	--brand-orange: #ff5900;
+	--brand-black: #1f1f21;
+	--brand-yellow: #fcde05;
+	--brand-lime: #c2f412;
+	--brand-purple: #9b5de5;
 }
 
+
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-brand: var(--brand-orange);
-  --color-muted: #222;
-  --font-sans: var(--font-chakra-petch);
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+	--color-brand: var(--brand-orange);
+	--color-muted: #222222;
+	--font-sans: var(--font-chakra-petch);
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #1f1f21;
-    --foreground: #fcfcfc;
-  }
+	:root {
+		--background: #1f1f21;
+		--foreground: #fcfcfc;
+	}
 }
 
-/* =========================
-   🧭 Global Resets
-========================= */
 html {
-  scroll-behavior: smooth;
-  cursor: url("/images/Cursor_norm.png"), auto;
+	scroll-behavior: smooth;
 }
 
 body {
-  height: 100%;
-  overflow: hidden;
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-chakra-petch), system-ui, -apple-system, Arial, Helvetica, sans-serif;
-  -webkit-overflow-scrolling: touch;
-  -webkit-tap-highlight-color: transparent;
+	background: var(--background);
+	color: var(--foreground);
+	font-family: var(--font-chakra-petch), system-ui, -apple-system, Arial, Helvetica, sans-serif;
 }
 
-/* Utility */
 @utility container-px {
-  padding-inline: 1.25rem;
+	padding-left: 1.25rem;
+	padding-right: 1.25rem;
 }
 
-/* =========================
-   🧱 Typography
-========================= */
-.h1 { @apply text-[clamp(48px,8vw,96px)] font-extrabold leading-[0.95]; }
-.h2 { @apply text-[clamp(32px,5.5vw,56px)] font-bold; }
-.h3 { @apply text-[clamp(24px,4vw,36px)] font-bold; }
-.h4 { @apply text-[clamp(18px,3vw,24px)] font-semibold; }
-.h5 { @apply text-[clamp(16px,2.5vw,18px)] font-medium; }
-
-/* =========================
-   🎨 Components
-========================= */
 .btn-primary {
-  @apply inline-flex items-center justify-center px-6 py-3 rounded 
-    bg-[var(--brand-orange)] text-foreground font-semibold tracking-wide 
-    shadow-[0_2px_0_0_rgba(0,0,0,0.2)] hover:brightness-110 transition;
+	@apply inline-flex items-center justify-center px-6 py-3 rounded bg-[var(--brand-orange)] text-foreground font-semibold tracking-wide shadow-[0_2px_0_0_rgba(0,0,0,0.2)] hover:brightness-110 transition;
+}
+
+.h1 {
+	@apply text-[clamp(48px,8vw,96px)] font-extrabold leading-[0.95];
+}
+.h2 {
+	@apply text-[clamp(32px,5.5vw,56px)] font-bold;
+}
+.h3 {
+	@apply text-[clamp(24px,4vw,36px)] font-bold;
+}
+.h4 {
+	@apply text-[clamp(18px,3vw,24px)] font-semibold;
+}
+.h5 {
+	@apply text-[clamp(16px,2.5vw,18px)] font-medium;
 }
 
 .hero-label {
-  @apply inline-block bg-black text-white border-2 border-white px-4 py-2;
-  box-shadow: 0 0 0 6px rgba(0, 0, 0, 0.6);
+	@apply inline-block bg-black text-white border-2 border-white px-4 py-2 shadow-[0_0_0_6px_rgba(0,0,0,0.6)];
 }
-
 .hero-underline {
-  height: 14px;
-  background: var(--brand-yellow);
+	height: 14px;
+	background: var(--brand-yellow);
 }
 
-/* =========================
-   🖱️ Cursor Styles
-========================= */
-html, body, .r3f-canvas, .r3f-canvas * {
-  cursor: url("/images/Cursor_norm.png"), auto;
+html,
+body {
+	height: 100%;
+	overflow: hidden;
+	/* Better mobile browser support */
+	-webkit-overflow-scrolling: touch;
+	-webkit-tap-highlight-color: transparent;
+}
+main {
+  height: 100dvh;
+  /* Fallback for browsers that don't support dvh */
+  height: 100vh;
+  overflow-y: auto; /* allow vertical scroll */
+  scroll-snap-type: y mandatory;
+
+  /* Hide scrollbar in Firefox */
+  scrollbar-width: none;
+
+  /* Hide scrollbar in IE/Edge */
+  -ms-overflow-style: none;
+  
+  /* Better mobile browser support */
+  -webkit-overflow-scrolling: touch;
 }
 
+/* Hide scrollbar in Chrome, Safari, Edge */
+main::-webkit-scrollbar {
+  display: none;
+}
+
+
+main > section,
+main > footer {
+	min-height: 100dvh;
+	scroll-snap-align: start;
+	scroll-snap-stop: always;
+	opacity: 0;
+	transform: translateY(24px);
+	transition: opacity 300ms ease, transform 400ms ease;
+}
+
+main > section.is-in-view,
+main > footer.is-in-view {
+	opacity: 1;
+	transform: none;
+}
+
+/* Marquee keyframes */
+@keyframes marquee-left {
+	0% {
+		transform: translateX(0);
+	}
+	100% {
+		transform: translateX(-50%);
+	}
+}
+
+@keyframes marquee-right {
+	0% {
+		transform: translateX(-50%);
+	}
+	100% {
+		transform: translateX(0);
+	}
+}
+
+.marquee-wrap {
+	position: relative;
+	overflow: hidden;
+	width: 100%;
+}
+
+.marquee-track {
+	display: flex;
+	gap: 15px;
+	will-change: transform;
+}
+
+.marquee-left .marquee-track {
+	animation: marquee-left 30s linear infinite;
+}
+
+.marquee-right .marquee-track {
+	animation: marquee-right 30s linear infinite;
+	transform: translateX(-50%);
+}
+
+.vibe-gif {
+	width: 420px;
+	height: auto;
+	object-fit: cover;
+}
+
+@media (max-width: 1024px) {
+	.vibe-gif {
+		width: 180px;
+	}
+}
+
+@media (max-width: 768px) {
+	.vibe-gif {
+		width: 140px;
+	}
+}
+
+@media (max-width: 480px) {
+	.vibe-gif {
+		width: 100px;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.marquee-left .marquee-track,
+	.marquee-right .marquee-track {
+		animation: none;
+		transform: none;
+	}
+}
+
+/* Default cursor everywhere */
+html, body {
+  cursor: url('/images/Cursor_norm.png'), auto;
+}
+
+/* Ensure the R3F canvas inherits the site cursor by default */
+.r3f-canvas, .r3f-canvas * {
+  cursor: url('/images/Cursor_norm.png'), auto;
+}
+
+/* Generic pointer hover cursor */
 a:hover,
 button:hover,
 .clickable:hover,
 .boaring-hover:hover {
-  cursor: url("/images/cursor_boring.png"), pointer;
+  cursor: url('/images/cursor_boring.png'), pointer;
 }
 
-.coinman-hover:hover,
-.fuck-button,
+/* Special hover for CoinMan and UnCtrlButton */
+.coinman-hover:hover,.fuck-button,
 .unctrlbutton-hover:hover {
-  cursor: url("/images/Cursor_1011.png"), pointer;
+  cursor: url('/images/Cursor_1011.png'), pointer;
 }
 
+/* Overlay elements inherit default cursor */
 .motion-overlay,
 #mobile-nav-overlay,
 .motion-overlay *,
-#mobile-nav-overlay *,
+#mobile-nav-overlay * {
+  cursor: url('/images/Cursor_norm.png'), auto !important;
+}
+
+/* Ensure boaring-hover works on any element including buttons */
 .boaring-hover,
 .boaring-hover * {
-  cursor: url("/images/Cursor_norm.png"), auto !important;
+  cursor: url('/images/cursor_boring.png'), pointer !important;
 }
 
-/* =========================
-   🧭 Scroll / Section Animations
-========================= */
-main {
-  height: 100dvh;
-  height: 100vh;
-  overflow-y: auto;
-  scroll-snap-type: y mandatory;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  -webkit-overflow-scrolling: touch;
-}
-main::-webkit-scrollbar { display: none; }
-
-main > section,
-main > footer {
-  min-height: 100dvh;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 300ms ease, transform 400ms ease;
-}
-main > section.is-in-view,
-main > footer.is-in-view {
-  opacity: 1;
-  transform: none;
-}
-
-/* Global reveal */
-section,
-footer,
-[data-section] {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
-  will-change: opacity, transform;
-}
-.is-in-view {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* =========================
-   🎞️ Marquee Animations
-========================= */
-@keyframes marquee-left {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-@keyframes marquee-right {
-  from { transform: translateX(-50%); }
-  to { transform: translateX(0); }
-}
-
-.marquee-wrap {
-  position: relative;
-  overflow: hidden;
-  width: 100%;
-}
-.marquee-track {
-  display: flex;
-  gap: 15px;
-  will-change: transform;
-}
-.marquee-left .marquee-track {
-  animation: marquee-left 30s linear infinite;
-}
-.marquee-right .marquee-track {
-  animation: marquee-right 30s linear infinite;
-  transform: translateX(-50%);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .marquee-track { animation: none !important; transform: none !important; }
-}
-
-/* =========================
-   📹 Video & Canvas Fixes
-========================= */
+/* Video compatibility improvements */
 video {
   object-fit: cover;
-  display: block;
-  background: #000;
-  opacity: 1 !important;
-  pointer-events: none;
-  outline: none;
+  /* Better mobile video support */
   -webkit-transform: translateZ(0);
   transform: translateZ(0);
+  /* Force hardware acceleration */
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
+  /* Opera mobile fixes */
+  background: #000;
+  /* Ensure video is visible */
+  opacity: 1 !important;
+  /* Force video to render */
+  display: block;
+  /* Opera specific fixes */
+  -o-object-fit: cover;
+  -ms-object-fit: cover;
+  /* Force autoplay and remove controls */
+  pointer-events: none;
+  /* Remove any browser controls */
+  -webkit-media-controls: none;
+  -webkit-media-controls-panel: none;
+  -webkit-media-controls-play-button: none;
+  -webkit-media-controls-timeline: none;
+  -webkit-media-controls-current-time-display: none;
+  -webkit-media-controls-time-remaining-display: none;
+  -webkit-media-controls-mute-button: none;
+  -webkit-media-controls-volume-slider: none;
+  -webkit-media-controls-fullscreen-button: none;
+  /* Force autoplay */
+  autoplay: true;
+  /* Remove focus outline */
+  outline: none;
+  /* Better mobile performance */
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Better WebGL canvas support */
 .r3f-canvas {
+  /* Force hardware acceleration */
   -webkit-transform: translateZ(0);
   transform: translateZ(0);
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
+  /* Better touch support */
   touch-action: manipulation;
 }
-
-/* =========================
-   🌀 Responsive GIF Sizes
-========================= */
-.vibe-gif {
-  width: 420px;
-  height: auto;
-  object-fit: cover;
-}
-@media (max-width: 1024px) { .vibe-gif { width: 180px; } }
-@media (max-width: 768px)  { .vibe-gif { width: 140px; } }
-@media (max-width: 480px)  { .vibe-gif { width: 100px; } }

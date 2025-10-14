@@ -2,57 +2,86 @@
 
 import { useEffect, useRef } from "react";
 
+function debounce(fn, wait = 120) {
+  let t;
+  return (...args) => {
+    clearTimeout(t);
+    t = setTimeout(() => fn(...args), wait);
+  };
+}
+
 export default function ScrollEffects({ children }) {
   const ioRef = useRef(null);
+  const observedRef = useRef(new Set());
+  const mutationRef = useRef(null);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    let cancelled = false;
 
-    // Wait until the browser is idle (after paint, idle thread)
-    requestIdleCallback(() => {
-      const main = document.querySelector("main");
+    const createObserver = (main) => {
       if (!main) return;
 
-      // --- Create intersection observer ---
+      if (ioRef.current) {
+        try { ioRef.current.disconnect(); } catch (e) {}
+      }
+      observedRef.current = new Set();
+
       ioRef.current = new IntersectionObserver(
         (entries) => {
-          for (const entry of entries) {
-            if (entry.isIntersecting) {
-              entry.target.classList.add("is-in-view");
-              ioRef.current.unobserve(entry.target);
-            }
-          }
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) entry.target.classList.add("is-in-view");
+          });
         },
         { threshold: 0.25 }
       );
 
-      // --- Observe all main sections ---
-      const targets = main.querySelectorAll("section, footer, [data-section]");
-      targets.forEach((el) => ioRef.current.observe(el));
-
-      // --- Light mutation observer for newly added sections ---
-      const mo = new MutationObserver((mutations) => {
-        for (const m of mutations) {
-          m.addedNodes.forEach((node) => {
-            if (
-              node.nodeType === 1 &&
-              (node.matches("section, footer, [data-section]"))
-            ) {
+      const syncObserved = () => {
+        const nodes = Array.from(main.querySelectorAll("section, footer, [data-section]"));
+        // observe new nodes
+        nodes.forEach((node) => {
+          if (!observedRef.current.has(node)) {
+            try {
               ioRef.current.observe(node);
-            }
-          });
-        }
-      });
-
-      // Only watch direct children; no deep subtree scanning
-      mo.observe(main, { childList: true });
-
-      // --- Cleanup ---
-      return () => {
-        ioRef.current?.disconnect();
-        mo.disconnect();
+              observedRef.current.add(node);
+            } catch (e) {}
+          }
+        });
+        // unobserve removed nodes
+        Array.from(observedRef.current).forEach((node) => {
+          if (!document.contains(node)) {
+            try {
+              ioRef.current.unobserve(node);
+            } catch (e) {}
+            observedRef.current.delete(node);
+          }
+        });
       };
-    });
+
+      syncObserved();
+
+      // watch for DOM changes inside <main> so newly-mounted lazy sections are picked up
+      mutationRef.current = new MutationObserver(debounce(syncObserved, 100));
+      mutationRef.current.observe(main, { childList: true, subtree: true });
+    };
+
+    const waitForMain = () => {
+      const main = document.querySelector("main");
+      if (!main && !cancelled) {
+        requestAnimationFrame(waitForMain);
+      } else if (main && !cancelled) {
+        createObserver(main);
+      }
+    };
+    waitForMain();
+
+    // Removed arrow-key navigation per request; default browser scroll behavior remains
+
+    return () => {
+      cancelled = true;
+      // no keydown listener to remove
+      if (ioRef.current) try { ioRef.current.disconnect(); } catch (e) {}
+      if (mutationRef.current) mutationRef.current.disconnect();
+    };
   }, []);
 
   return children;
