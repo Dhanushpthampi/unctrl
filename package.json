@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@motionone/utils": "^10.18.0",
     "@next/bundle-analyzer": "^15.5.4",
     "@react-spring/three": "^10.0.3",
     "@react-three/drei": "^10.7.6",

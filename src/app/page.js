@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import dynamic from "next/dynamic";
 import IntroOverlay from "@/components/IntroOverlay";
 import Hero from "@/sections/Hero";
+import dynamic from "next/dynamic";
 
 const Story = dynamic(() => import("@/sections/Story"));
 const Renders = dynamic(() => import("@/sections/Renders"));
@@ -18,9 +18,7 @@ export default function Home() {
 
   useEffect(() => {
     try {
-      const seen =
-        typeof window !== "undefined" &&
-        sessionStorage.getItem("introSeen");
+      const seen = sessionStorage.getItem("introSeen");
       if (seen === "1") setShowIntro(false);
     } catch {}
   }, []);
