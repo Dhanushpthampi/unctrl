@@ -21,9 +21,9 @@ export default function Story() {
   return (
     <section
       id="story"
-      className="relative w-screen h-screen bg-black md:bg-[#b34a00] overflow-hidden flex items-center justify-center"
+      className="relative w-screen h-screen bg-black md:bg-[#fe5900] overflow-hidden flex items-center justify-center"
     >
-      {/* Background video for XL screens (optional) */}
+      {/* Background video for XL screens (optional)
       {!isMobile && (
         <div className="absolute inset-0 xl:block">
           <video
@@ -34,7 +34,7 @@ export default function Story() {
             muted
           />
         </div>
-      )}
+      )} */}
 
       {/* Main content */}
       <div className="absolute inset-0 flex items-center justify-center w-full h-full z-10">
