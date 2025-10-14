@@ -69,14 +69,14 @@ export default function Faqs() {
   return (
     <section id="faqs" className="relative bg-transparent text-white overflow-hidden">
       {/* Conditional background - Image for mobile, Video for desktop */}
-      {isMobile ? (
+      {/* {isMobile ? (
         <img
           src={ASSETS.posterGlitch}
           alt="Background"
           className="absolute inset-0 -z-20 w-full h-full object-cover"
           loading="lazy"
         />
-      ) : (
+      ) : ( */}
         <MobileVideo
           ref={videoRef}
           src={ASSETS.glitch}
@@ -86,11 +86,11 @@ export default function Faqs() {
           loop={true}
           muted={true}
         />
-      )}
+      {/* )} */}
 
       {/* FAQ Content */}
       <div className="relative z-10 max-w-3xl mx-auto container-px py-12 sm:py-16 md:pt-24 lg:pt-28">
-        <h2 className="h2 text-center mb-8 text-3xl sm:text-4xl font-bold">FAQs</h2>
+        <h2 className="h2 text-center mb-8 text-3xl sm:text-4xl font-bold md:mt-0 mt-12">FAQs</h2>
         <div className="space-y-3">
           {FAQ_ITEMS.map((item, idx) => (
             <AccordionItem key={idx} index={idx + 1} q={item.q} a={item.a} />
