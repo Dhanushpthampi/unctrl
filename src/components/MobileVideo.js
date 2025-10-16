@@ -136,12 +136,13 @@ const MobileVideo = forwardRef(function MobileVideo({
       x5-playsinline="true"
       x5-video-player-type="h5"
       x5-video-player-fullscreen="true"
-      preload="auto"
+      preload="metadata"
       style={{
         // Force hardware acceleration
         transform: 'translateZ(0)',
         backfaceVisibility: 'hidden',
-        willChange: 'transform'
+        willChange: 'transform',
+        pointerEvents: 'none'
       }}
       {...props}
     />

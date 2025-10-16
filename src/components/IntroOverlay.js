@@ -49,6 +49,20 @@ export default function IntroOverlay({ onFinished }) {
         autoPlay
         muted
         playsInline
+        webkit-playsinline="true"
+        x5-playsinline="true"
+        x5-video-player-type="h5"
+        x5-video-player-fullscreen="true"
+        preload="metadata"
+        controls={false}
+        controlsList="nodownload nofullscreen noremoteplayback"
+        disablePictureInPicture={true}
+        style={{
+          transform: 'translateZ(0)',
+          backfaceVisibility: 'hidden',
+          willChange: 'transform',
+          pointerEvents: 'none'
+        }}
         onCanPlayThrough={() => setVideoLoaded(true)}
         onEnded={handleVideoEnd}
       >
