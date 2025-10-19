@@ -26,23 +26,10 @@ export default function LazyVideo({ src, className, ...props }) {
   return <video
     ref={videoRef}
     className={className}
-    preload="metadata"   // <-- optimized for mobile
+    preload="auto"   // <-- preloads immediately
     muted
     loop
     playsInline
-    webkit-playsinline="true"
-    x5-playsinline="true"
-    x5-video-player-type="h5"
-    x5-video-player-fullscreen="true"
-    controls={false}
-    controlsList="nodownload nofullscreen noremoteplayback"
-    disablePictureInPicture={true}
-    style={{
-      transform: 'translateZ(0)',
-      backfaceVisibility: 'hidden',
-      willChange: 'transform',
-      pointerEvents: 'none'
-    }}
     {...props}
   />
 }

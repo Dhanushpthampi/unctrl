@@ -10,7 +10,6 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Head from "next/head";
 import { ASSETS } from "@/const/assets";
-import { initMobilePerformance } from "./mobilePerformance";
 
 const chakra = Chakra_Petch({
   weight: ["400", "700"],
@@ -18,7 +17,7 @@ const chakra = Chakra_Petch({
   variable: "--font-chakra-petch",
 });
 
-// Centralized video preload + viewport fix + mobile optimizations
+// Centralized video preload + viewport fix
 function VideoPreload() {
   useEffect(() => {
     const setVh = () => {
@@ -27,9 +26,6 @@ function VideoPreload() {
     };
     setVh();
     window.addEventListener("resize", setVh);
-
-    // Initialize mobile performance optimizations
-    initMobilePerformance();
 
     // Preload correct video
     const isMobile = window.innerWidth <= 768;

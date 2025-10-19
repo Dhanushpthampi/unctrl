@@ -42,19 +42,15 @@ function VideoCard({ src, isVisible }) {
   );
 }
 
-function Row({ videos, onReady, space = 30, activeIndex = 0, rtl = false }) {
+function Row({ videos, onReady, space = 30, activeIndex = 0 }) {
   return (
-    <div className="w-full relative z-10" {...(rtl ? { dir: "rtl" } : {})}>
+    <div className="w-full relative z-10">
       <Swiper
         loop
         slidesPerView="auto"
         spaceBetween={space}
         allowTouchMove={false}
         speed={300}
-        onBeforeInit={(s) => {
-          // Configure additional looped slides without leaking props to DOM (fixes React warning)
-          try { s.params.loopAdditionalSlides = videos.length; } catch {}
-        }}
         onSwiper={(s) => onReady?.(s)}
         className="vibe-swiper"
       >
@@ -116,22 +112,11 @@ export default function Vibe() {
     const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     const waitForTransition = (swiper) =>
       new Promise((resolve) => {
-        // iOS Safari is unreliable with "transitionEnd"; use slideChangeTransitionEnd
-        let settled = false;
         const handler = () => {
-          if (settled) return;
-          settled = true;
-          try { swiper.off("slideChangeTransitionEnd", handler); } catch {}
+          swiper.off("transitionEnd", handler);
           resolve();
         };
-        try { swiper.on("slideChangeTransitionEnd", handler); } catch {}
-        // Fallback in case event doesn't fire on certain mobile browsers
-        setTimeout(() => {
-          if (settled) return;
-          settled = true;
-          try { swiper.off("slideChangeTransitionEnd", handler); } catch {}
-          resolve();
-        }, slideDurationMs + 50);
+        swiper.on("transitionEnd", handler);
       });
 
     const moveSteps = async (swiper, direction, steps, updateIndex, videoCount) => {
@@ -154,8 +139,7 @@ export default function Vibe() {
       while (!cancelled) {
         if (topRef.current) await moveSteps(topRef.current, "forward", stepSlides, setTopIndex, topVideos.length);
         await sleep(pauseBetweenRowsMs);
-        // With RTL on the bottom row container, "forward" will move visually to the right
-        if (bottomRef.current) await moveSteps(bottomRef.current, "forward", stepSlides, setBottomIndex, bottomVideos.length);
+        if (bottomRef.current) await moveSteps(bottomRef.current, "backward", stepSlides, setBottomIndex, bottomVideos.length);
         await sleep(pauseBetweenCyclesMs);
       }
     };
@@ -177,7 +161,7 @@ export default function Vibe() {
         <Row videos={topVideos} onReady={(s) => (topRef.current = s)} activeIndex={topIndex} />
 
         <div className="bottom-row-offset w-full z-30">
-          <Row videos={bottomVideos} onReady={(s) => (bottomRef.current = s)} activeIndex={bottomIndex} rtl />
+          <Row videos={bottomVideos} onReady={(s) => (bottomRef.current = s)} activeIndex={bottomIndex} />
         </div>
 
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-15 pointer-events-none">
