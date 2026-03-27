@@ -1,148 +1,127 @@
 "use client";
 
-import { useEffect, useRef, useState, forwardRef } from "react";
+import { useEffect, useRef, forwardRef, useCallback } from "react";
 
-const MobileVideo = forwardRef(function MobileVideo({ 
-  src, 
-  poster, 
-  className = "", 
-  autoPlay = true, 
-  loop = true, 
-  muted = true,
-  onError,
-  onCanPlay,
-  onEnded,
-  ...props 
-}, ref) {
-  const videoRef = useRef(null);
-  const [hasError, setHasError] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
+/**
+ * MobileVideo — ultra-optimised lazy video for smooth scrolling.
+ *
+ * Lifecycle:
+ *  1. Renders with NO src and preload="none" — zero network/decode cost.
+ *  2. When within 400px of viewport → sets src, loads, and plays.
+ *  3. When scrolled out of viewport → pauses immediately.
+ *  4. When scrolled far away (>1200px) → removes src entirely to free memory.
+ *     (Re-loads when scrolled back near.)
+ *
+ * All DOM mutations go through refs — zero React re-renders during scroll.
+ */
+const MobileVideo = forwardRef(function MobileVideo(
+  {
+    src,
+    poster,
+    className = "",
+    autoPlay = true,
+    loop = true,
+    muted = true,
+    onError,
+    onCanPlay,
+    onEnded,
+    ...props
+  },
+  ref
+) {
+  const internalRef = useRef(null);
+  const videoEl = ref || internalRef;
+  const loadedRef = useRef(false);
+  const srcRef = useRef(src);
+
+  srcRef.current = src;
+
+  const getVideo = useCallback(() => {
+    return typeof videoEl === "object" ? videoEl.current : internalRef.current;
+  }, [videoEl]);
 
   useEffect(() => {
-    const video = videoRef.current;
+    const video = getVideo();
     if (!video) return;
 
-    // Set video attributes to prevent controls
-    video.controls = false;
-    video.controlsList = 'nodownload nofullscreen noremoteplayback';
-    video.disablePictureInPicture = true;
-
-    // Force autoplay with multiple strategies
-    const forceAutoplay = async () => {
-      try {
-        // Strategy 1: Direct play
-        await video.play();
-        setIsPlaying(true);
-      } catch (error) {
-        console.log("Direct play failed, trying alternative methods");
-        
-        // Strategy 2: Set currentTime and play
-        video.currentTime = 0;
-        try {
-          await video.play();
-          setIsPlaying(true);
-        } catch (error2) {
-          console.log("Alternative play failed, trying user interaction");
-          
-          // Strategy 3: Wait for user interaction
-          const playOnInteraction = () => {
-            video.play().then(() => {
-              setIsPlaying(true);
-            }).catch(console.warn);
-          };
-          
-          // Add multiple interaction listeners
-          document.addEventListener("touchstart", playOnInteraction, { once: true });
-          document.addEventListener("click", playOnInteraction, { once: true });
-          document.addEventListener("scroll", playOnInteraction, { once: true });
-          
-          // Auto-play after a short delay (some browsers allow this)
-          setTimeout(() => {
-            video.play().then(() => {
-              setIsPlaying(true);
-            }).catch(console.warn);
-          }, 100);
+    // NEAR observer: load src + play when close to viewport
+    const nearIO = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          if (!video.src || video.src === "" || video.src === window.location.href) {
+            video.preload = "auto";
+            video.src = srcRef.current;
+            video.load();
+            loadedRef.current = true;
+          }
+          if (autoPlay) video.play().catch(() => {});
+        } else {
+          video.pause();
         }
-      }
-    };
+      },
+      { rootMargin: "400px 0px", threshold: 0.01 }
+    );
 
-    const handlePlay = () => {
-      setIsPlaying(true);
-    };
+    // FAR observer: unload src when very far away to reclaim memory
+    const farIO = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting && loadedRef.current) {
+          // Video is far off-screen — free the decoded video data
+          video.pause();
+          video.removeAttribute("src");
+          video.load(); // resets internal state, frees buffers
+          video.preload = "none";
+          loadedRef.current = false;
+        }
+      },
+      { rootMargin: "1200px 0px", threshold: 0 }
+    );
 
-    const handlePause = () => {
-      setIsPlaying(false);
-    };
+    nearIO.observe(video);
+    farIO.observe(video);
 
-    const handleError = (e) => {
-      console.warn("Video error:", e);
-      setHasError(true);
-      onError?.(e);
-    };
-
+    /* ── Event handlers ── */
+    const handleError = (e) => onError?.(e);
     const handleCanPlay = () => {
       onCanPlay?.();
-      if (autoPlay) {
-        forceAutoplay();
-      }
+      if (autoPlay) video.play().catch(() => {});
     };
+    const handleEnded = () => onEnded?.();
 
-    const handleEnded = () => {
-      onEnded?.();
-    };
-
-    // Add event listeners
-    video.addEventListener("play", handlePlay);
-    video.addEventListener("pause", handlePause);
     video.addEventListener("error", handleError);
     video.addEventListener("canplay", handleCanPlay);
     video.addEventListener("ended", handleEnded);
-    video.addEventListener("loadstart", handleCanPlay);
-
-    // Force play immediately if video is already loaded
-    if (video.readyState >= 3) {
-      forceAutoplay();
-    }
 
     return () => {
-      video.removeEventListener("play", handlePlay);
-      video.removeEventListener("pause", handlePause);
+      nearIO.disconnect();
+      farIO.disconnect();
       video.removeEventListener("error", handleError);
       video.removeEventListener("canplay", handleCanPlay);
       video.removeEventListener("ended", handleEnded);
-      video.removeEventListener("loadstart", handleCanPlay);
     };
-  }, [autoPlay, onError, onCanPlay, onEnded]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoPlay]);
 
-  if (hasError) {
-    return (
-      <div className={`${className} bg-black flex items-center justify-center`}>
-        <p className="text-white">Video not supported</p>
-      </div>
-    );
-  }
+  // If parent changes src prop while loaded, update directly
+  useEffect(() => {
+    const video = getVideo();
+    if (video && loadedRef.current && video.src !== src) {
+      video.src = src;
+      video.load();
+      if (autoPlay) video.play().catch(() => {});
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [src]);
 
   return (
     <video
-      ref={ref || videoRef}
-      src={src}
+      ref={videoEl}
       poster={poster}
       className={`w-full h-full object-cover ${className}`}
-      autoPlay={autoPlay}
       loop={loop}
       muted={muted}
       playsInline
-      webkit-playsinline="true"
-      x5-playsinline="true"
-      x5-video-player-type="h5"
-      x5-video-player-fullscreen="true"
-      preload="auto"
-      style={{
-        // Force hardware acceleration
-        transform: 'translateZ(0)',
-        backfaceVisibility: 'hidden',
-        willChange: 'transform'
-      }}
+      preload="none"
       {...props}
     />
   );

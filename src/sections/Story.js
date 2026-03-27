@@ -38,12 +38,13 @@ export default function Story() {
 
       {/* Main content */}
       <div className="absolute inset-0 flex items-center justify-center w-full h-full z-10">
-        <video
+        <MobileVideo
           src={videoSrc}
+          poster={ASSETS.posterStoryV}
           className="max-w-[100vw] w-auto h-auto md:max-h-[100vh] md:h-[100vh]"
-          autoPlay
-          loop
-          muted
+          autoPlay={true}
+          loop={true}
+          muted={true}
         />
       </div>
     </section>

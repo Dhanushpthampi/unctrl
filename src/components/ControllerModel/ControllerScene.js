@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Suspense } from "react";
 import { Environment, OrbitControls } from "@react-three/drei";
 import ControllerInner from "./ControllerInner";
@@ -10,8 +10,8 @@ function AutoRotate({ children, orbitControlsRef }) {
   const lastInteractionRef = useRef(Date.now());
   const [autoRotate, setAutoRotate] = useState(true);
 
-  const AUTO_ROTATE_DELAY = 3000; // 3s inactivity
-  const ROTATE_SPEED = 0.0015;    // very slow rotation
+  const AUTO_ROTATE_DELAY = 3000;
+  const ROTATE_SPEED = 0.0015;
 
   // Detect user interaction
   useEffect(() => {
@@ -41,6 +41,15 @@ function AutoRotate({ children, orbitControlsRef }) {
   return <group ref={groupRef}>{children}</group>;
 }
 
+// Keeps the render loop ticking only while the section is in view
+function RenderLoop({ active }) {
+  const { invalidate } = useThree();
+  useFrame(() => {
+    if (active) invalidate();
+  });
+  return null;
+}
+
 export default function ControllerScene({ animateIn }) {
   const [cameraPos, setCameraPos] = useState([0, 15, 55]);
   const [modelScale, setModelScale] = useState([0.35, 0.35, 0.35]);
@@ -55,12 +64,12 @@ export default function ControllerScene({ animateIn }) {
 
       if (mobile) {
         setCameraPos([0, 15, 55]);
-        setModelScale([0.35, 0.35, 0.35]); // slightly bigger for mobile
-        setDpr([1.5, 2]);                  // higher DPR for crispness
+        setModelScale([0.35, 0.35, 0.35]);
+        setDpr([1, 1]);                    // Cap at 1x for smooth performance
       } else {
         setCameraPos([0, 15, 45]);
         setModelScale([0.4, 0.4, 0.4]);
-        setDpr([1, 1.25]);                 // normal DPR for desktop
+        setDpr([1, 1.25]);
       }
     };
 
@@ -75,7 +84,7 @@ export default function ControllerScene({ animateIn }) {
       dpr={dpr}
       camera={{ position: cameraPos, fov: 15 }}
       gl={{ antialias: false, alpha: false, stencil: false, powerPreference: "low-power" }}
-      frameloop="always"
+      frameloop="demand"
     >
       <Suspense fallback={null}>
         {/* Lights */}
@@ -97,6 +106,9 @@ export default function ControllerScene({ animateIn }) {
             <ControllerInner animateIn={animateIn} />
           </group>
         </AutoRotate>
+
+        {/* Only tick the render loop when USP section is visible */}
+        <RenderLoop active={animateIn} />
       </Suspense>
 
       <OrbitControls
