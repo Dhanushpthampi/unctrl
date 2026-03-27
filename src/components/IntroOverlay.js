@@ -1,20 +1,39 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ASSETS } from "@/const/assets";
 
 export default function IntroOverlay({ onFinished }) {
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [isFadingOut, setIsFadingOut] = useState(false);
+  const videoRef = useRef(null);
+  const loaderTimeoutRef = useRef(null);
 
-  // pick correct video client-side
-  const [videoSrc, setVideoSrc] = useState(null);
   useEffect(() => {
-    const isMobile = window.innerWidth <= 768;
-    setVideoSrc(isMobile ? ASSETS.introV : ASSETS.intro);
+    // Failsafe: if video doesn't load within 5 seconds, automatically skip.
+    loaderTimeoutRef.current = setTimeout(() => {
+      console.warn("Intro video load timeout. Auto-skipping.");
+      handleSkip();
+    }, 5000);
+
+    return () => clearTimeout(loaderTimeoutRef.current);
   }, []);
 
-  if (!videoSrc) return null; // wait until client-side
+  useEffect(() => {
+    if (!videoRef.current) return;
+    
+    // Determine source once on client immediately
+    const isMobile = window.matchMedia("(max-width: 768px)").matches;
+    videoRef.current.src = isMobile ? ASSETS.introV : ASSETS.intro;
+    videoRef.current.load();
+    
+    // explicitly play
+    videoRef.current.play().catch(e => {
+        console.warn("Autoplay blocked or failed:", e);
+        // If autoplay breaks, just skip
+        handleSkip();
+    });
+  }, []);
 
   const handleVideoEnd = () => {
     setIsFadingOut(true);
@@ -23,6 +42,7 @@ export default function IntroOverlay({ onFinished }) {
 
   const handleSkip = () => {
     setIsFadingOut(true);
+    if (loaderTimeoutRef.current) clearTimeout(loaderTimeoutRef.current);
     setTimeout(() => onFinished?.(), 700);
   };
 
@@ -33,7 +53,7 @@ export default function IntroOverlay({ onFinished }) {
       }`}
       style={{ height: "var(--vh, 100vh)" }} // iOS-safe dynamic viewport height
     >
-      {/* Loading screen */}
+      {/* Loading spinner while video is buffering */}
       {!videoLoaded && (
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 z-10">
           <div className="w-12 h-12 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
@@ -41,21 +61,23 @@ export default function IntroOverlay({ onFinished }) {
         </div>
       )}
 
-      {/* Video */}
+      {/* Responsive Video via <source media> — browser natively downloads the correct one */}
       <video
+        ref={videoRef}
         className={`w-full h-full object-cover transition-opacity duration-500 z-0 ${
           videoLoaded ? "opacity-100" : "opacity-0"
         }`}
         autoPlay
         muted
         playsInline
-        onCanPlayThrough={() => setVideoLoaded(true)}
+        onLoadedData={() => {
+          setVideoLoaded(true);
+          if (loaderTimeoutRef.current) clearTimeout(loaderTimeoutRef.current);
+        }}
         onEnded={handleVideoEnd}
-      >
-        <source src={videoSrc} type="video/mp4" />
-      </video>
+      />
 
-      {/* Skip button */}
+      {/* Skip button overlay */}
       <button
         onClick={handleSkip}
         className="absolute top-4 right-4 z-20 bg-black/50 text-white px-4 py-2 rounded-lg backdrop-blur-sm border border-white/20 hover:bg-black/70 transition-colors"

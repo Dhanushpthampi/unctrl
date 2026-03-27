@@ -19,11 +19,11 @@ const allVideos = [
 function VideoCard({ src, isVisible }) {
   const videoRef = useRef(null);
 
+  // Extra hint: if the carousel says this slide is NOT active, force-pause
+  // (the MobileVideo IO will handle play when it enters the viewport)
   useEffect(() => {
     if (!videoRef.current) return;
-    if (isVisible) {
-      videoRef.current.play().catch(() => {});
-    } else {
+    if (!isVisible) {
       videoRef.current.pause();
     }
   }, [isVisible]);
@@ -34,7 +34,7 @@ function VideoCard({ src, isVisible }) {
         ref={videoRef}
         src={src}
         className="video-el"
-        autoPlay={true}
+        autoPlay={isVisible}
         loop={true}
         muted={true}
       />
@@ -193,9 +193,6 @@ export default function Vibe() {
           height: 100%;
           object-fit: cover;
           display: block;
-          will-change: transform;
-          transform: translateZ(0);
-          backface-visibility: hidden;
         }
         .bottom-row-offset {
           transform: translateX(-112px);

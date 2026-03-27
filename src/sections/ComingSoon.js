@@ -56,7 +56,7 @@ export default function ComingSoon() {
   return (
     <section
       id="coming-soon"
-      className="relative min-h-[100svh] bg-black flex flex-col items-center justify-center text-white px-5"
+      className="relative z-20 min-h-[100svh] bg-black flex flex-col items-center justify-center text-white px-5"
     >
       <div className="w-full max-w-[1100px] mx-auto">
         <h1 className="text-4xl font-bold mb-10 text-center pt-6 sm:pt-10">

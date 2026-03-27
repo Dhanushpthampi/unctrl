@@ -16,23 +16,13 @@ const Faqs = dynamic(() => import("@/sections/Faqs"));
 export default function Home() {
   const [showIntro, setShowIntro] = useState(true);
 
-  useEffect(() => {
-    try {
-      const seen = sessionStorage.getItem("introSeen");
-      if (seen === "1") setShowIntro(false);
-    } catch {}
-  }, []);
+  // Removed sessionStorage check so intro always plays during testing
 
   return (
     <main className="w-full overflow-x-hidden">
       {showIntro && (
         <IntroOverlay
-          onFinished={() => {
-            try {
-              sessionStorage.setItem("introSeen", "1");
-            } catch {}
-            setShowIntro(false);
-          }}
+          onFinished={() => setShowIntro(false)}
         />
       )}
 

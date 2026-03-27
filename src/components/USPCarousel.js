@@ -1,10 +1,15 @@
 "use client";
 
 import { useRef, useEffect, useState } from "react";
-import { motion, useAnimation } from "framer-motion";
 
+/**
+ * USPCarousel — lightweight infinite-scroll carousel.
+ *
+ * Uses CSS animation instead of per-frame JS requestAnimationFrame + framer-motion.set()
+ * to move the track, which runs entirely on the compositor thread without
+ * touching the main thread or triggering React re-renders.
+ */
 export default function USPCarousel({ items }) {
-  const controls = useAnimation();
   const containerRef = useRef();
   const [scrollWidth, setScrollWidth] = useState(0);
 
@@ -13,45 +18,44 @@ export default function USPCarousel({ items }) {
 
   useEffect(() => {
     if (!containerRef.current) return;
-    const totalWidth = containerRef.current.scrollWidth / 2; // half because we duplicated
+    const totalWidth = containerRef.current.scrollWidth / 2;
     setScrollWidth(totalWidth);
-
-    let x = 0;
-    let speed = 0.5; // pixels per frame, tweak for speed
-    let animationFrame;
-
-    const animate = () => {
-      x += speed;
-      if (x >= totalWidth) x = 0; // loop
-      controls.set({ x: -x });
-      animationFrame = requestAnimationFrame(animate);
-    };
-
-    animate();
-    return () => cancelAnimationFrame(animationFrame);
-  }, [controls, extendedItems]);
+  }, [extendedItems.length]);
 
   return (
     <div className="w-full overflow-hidden">
-      <motion.div
+      <div
         ref={containerRef}
-        className="flex gap-4 cursor-grab"
-        drag="x"
-        dragConstraints={{ left: -scrollWidth, right: 0 }}
-        dragElastic={0.2}
-        animate={controls}
-        whileTap={{ cursor: "grabbing" }}
+        className="flex gap-4"
+        style={{
+          // Pure CSS animation — runs on compositor thread, zero main-thread cost
+          animation: scrollWidth
+            ? `usp-scroll ${scrollWidth / 30}s linear infinite`
+            : "none",
+        }}
       >
         {extendedItems.map((img, idx) => (
-          <motion.img
+          <img
             key={idx}
             src={img}
-            alt={`USP ${idx + 1}`}
+            alt={`USP ${(idx % items.length) + 1}`}
             className="w-[80vw] h-auto rounded-xl select-none flex-shrink-0"
             draggable={false}
+            loading="lazy"
           />
         ))}
-      </motion.div>
+      </div>
+
+      <style jsx>{`
+        @keyframes usp-scroll {
+          from {
+            transform: translateX(0);
+          }
+          to {
+            transform: translateX(-50%);
+          }
+        }
+      `}</style>
     </div>
   );
 }
